@@ -2,18 +2,13 @@
 
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createClient } from "@supabase/supabase-js";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 export default function LoginClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const supabase = useMemo(() => {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-    return createClient(url, anon);
-  }, []);
-
+  const supabase = useMemo(() => createSupabaseBrowserClient(), []);
   const nextUrl = searchParams.get("next") || "/admin";
 
   const [email, setEmail] = useState("");
@@ -26,10 +21,7 @@ export default function LoginClient() {
     setErrorMsg(null);
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     setLoading(false);
 
@@ -46,9 +38,6 @@ export default function LoginClient() {
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
       <div className="w-full max-w-md rounded-2xl border border-neutral-800 bg-neutral-950 p-6">
         <h1 className="text-2xl font-bold">Admin Login</h1>
-        <p className="mt-2 text-sm text-neutral-400">
-          Entre com seu email e senha do Supabase.
-        </p>
 
         {errorMsg ? (
           <div className="mt-4 rounded-xl border border-red-800 bg-red-950/40 p-3 text-sm text-red-200">
@@ -65,7 +54,6 @@ export default function LoginClient() {
               type="email"
               autoComplete="email"
               className="mt-2 w-full rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3 text-white outline-none focus:border-yellow-400"
-              placeholder="seu@email.com"
               required
             />
           </div>
@@ -78,7 +66,6 @@ export default function LoginClient() {
               type="password"
               autoComplete="current-password"
               className="mt-2 w-full rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3 text-white outline-none focus:border-yellow-400"
-              placeholder="••••••••"
               required
             />
           </div>
