@@ -12,11 +12,16 @@ export default function ProductSection() {
   const [loading, setLoading] = useState(true);
 
   async function load() {
-    setLoading(true);
-    const res = await fetch("/api/products", { cache: "no-store" });
-    const data = await res.json().catch(() => ({}));
-    setAllProducts(Array.isArray(data.products) ? data.products : []);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const res = await fetch("/api/products", { cache: "no-store" });
+      const data = await res.json().catch(() => ({}));
+      setAllProducts(Array.isArray(data.products) ? data.products : []);
+    } catch (err) {
+      console.error("Erro ao carregar produtos:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -53,36 +58,28 @@ export default function ProductSection() {
           </button>
         </div>
 
-        {loading ? (
+        {loading && (
           <p className="text-neutral-400">Carregando produtos...</p>
-        ) : null}
+        )}
 
-        {/* BUSCA */}
         <input
           type="text"
           placeholder="Buscar produto..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="
-            mb-8 w-full md:w-96 px-4 py-3 rounded-lg
-            bg-neutral-900 text-white
-            border border-neutral-700
-            focus:outline-none focus:border-yellow-400
-          "
+          className="mb-8 w-full md:w-96 px-4 py-3 rounded-lg bg-neutral-900 text-white border border-neutral-700 focus:outline-none focus:border-yellow-400"
         />
 
-        {/* CATEGORIAS */}
         <CategoryCarousel
           categories={categories}
           active={activeCategory}
           onChange={setActiveCategory}
         />
 
-        {/* GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
           {filtered.map((product) => (
             <ProductCard
-              key={product.id}
+              key={String(product.id)}
               product={product}
               onOpen={() => setSelectedProduct(product)}
               onAdd={() => addToCart(product)}
@@ -90,17 +87,20 @@ export default function ProductSection() {
           ))}
         </div>
 
-        {/* MODAL */}
-        {selectedProduct ? (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+        {selectedProduct && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
             onClick={() => setSelectedProduct(null)}
           >
-            <div className="w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
-              {/* Reuse existing ProductModal via dynamic import to avoid rework */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+            <div
+              className="w-full max-w-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="rounded-2xl border border-neutral-800 bg-neutral-950 p-6 text-white">
                 <div className="flex items-start justify-between gap-3">
-                  <h3 className="text-xl font-semibold">{selectedProduct.name}</h3>
+                  <h3 className="text-xl font-semibold">
+                    {selectedProduct.name}
+                  </h3>
                   <button
                     className="rounded-lg border border-neutral-700 px-2 py-1 text-sm"
                     onClick={() => setSelectedProduct(null)}
@@ -108,14 +108,19 @@ export default function ProductSection() {
                     Fechar
                   </button>
                 </div>
-                {selectedProduct.image ? (
+
+                {selectedProduct.image && (
                   <img
                     src={selectedProduct.image}
                     alt={selectedProduct.name}
                     className="mt-4 h-64 w-full rounded-xl object-cover"
                   />
-                ) : null}
-                <p className="mt-4 text-neutral-300">{selectedProduct.description}</p>
+                )}
+
+                <p className="mt-4 text-neutral-300">
+                  {selectedProduct.description}
+                </p>
+
                 <div className="mt-6 flex items-center justify-between">
                   <span className="text-lg font-semibold">
                     R$ {Number(selectedProduct.price).toFixed(2)}
@@ -130,7 +135,7 @@ export default function ProductSection() {
               </div>
             </div>
           </div>
-        ) : null}
+        )}
       </div>
     </section>
   );

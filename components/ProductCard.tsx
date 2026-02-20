@@ -1,46 +1,45 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Product } from "@/config/products";
+import type { Product } from "@/config/products";
 
 type Props = {
   product: Product;
-  onAddToCart: () => void;
   onOpen: () => void;
+  onAdd: () => void; // 🔥 ESSA LINHA RESOLVE O ERRO
 };
 
-export default function ProductCard({ product, onAddToCart, onOpen }: Props) {
+export default function ProductCard({ product, onOpen, onAdd }: Props) {
   return (
-    <motion.div
-      whileHover={{ scale: 1.03 }}
-      className="bg-neutral-900 rounded-xl p-4 flex flex-col"
-    >
-      {/* IMAGEM */}
-      <button onClick={onOpen}>
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-48 object-contain mb-4"
-        />
+    <div className="rounded-2xl border border-neutral-800 bg-neutral-950 p-5 text-white">
+      <button onClick={onOpen} className="w-full text-left">
+        {product.image && (
+          <img
+            src={product.image}
+            alt={product.name}
+            className="h-52 w-full rounded-xl object-cover"
+          />
+        )}
+
+        <div className="mt-4">
+          <h3 className="text-lg font-semibold">{product.name}</h3>
+          <p className="mt-2 text-sm text-neutral-300">
+            {product.description}
+          </p>
+        </div>
       </button>
 
-      {/* NOME DO PRODUTO */}
-      <h3 className="text-white font-bold text-sm md:text-base mb-2 text-center">
-        {product.name}
-      </h3>
+      <div className="mt-5 flex items-center justify-between">
+        <span className="text-base font-semibold">
+          R$ {Number(product.price).toFixed(2)}
+        </span>
 
-      {/* PREÇO */}
-      <p className="text-green-400 font-semibold mb-4 text-center">
-        R$ {product.price.toFixed(2)}
-      </p>
-
-      {/* BOTÃO */}
-      <button
-        onClick={onAddToCart}
-        className="mt-auto bg-green-600 text-black py-3 rounded-lg font-bold hover:brightness-110 transition"
-      >
-        Adicionar ao orçamento
-      </button>
-    </motion.div>
+        <button
+          onClick={onAdd}
+          className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black"
+        >
+          Adicionar
+        </button>
+      </div>
+    </div>
   );
 }
