@@ -46,7 +46,18 @@ export async function middleware(req: NextRequest) {
   // pega o usuário (e refresca a sessão se necessário)
   const { data } = await supabase.auth.getUser();
 
-  if (!data?.user) {
+  let isAdmin = false;
+  if (data?.user) {
+    const { data: adminData } = await supabase
+      .from("admin_users")
+      .select("user_id")
+      .eq("user_id", data.user.id)
+      .maybeSingle();
+      
+    isAdmin = !!adminData;
+  }
+
+  if (!isAdmin) {
     const url = req.nextUrl.clone();
     url.pathname = "/admin/login";
     url.searchParams.set("next", pathname);
@@ -57,5 +68,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin", "/admin/:path*"],
 };
