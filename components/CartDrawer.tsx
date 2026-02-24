@@ -82,10 +82,10 @@ export default function CartDrawer() {
     // ✅ Registra o pedido para o painel /admin (pedido "real" = checkout/enviar pedido)
     // O carrinho armazena itens repetidos; aqui agregamos por produto para obter quantidade correta.
     try {
-      const agg = new Map<number, { productId: string; name: string; price: number; quantity: number }>();
+      const agg = new Map<string, { productId: string; name: string; price: number; quantity: number }>();
 
       for (const it of items) {
-        const key = Number(it.id);
+        const key = String(it.id);
         const current = agg.get(key) ?? {
           productId: String(it.id),
           name: it.name,

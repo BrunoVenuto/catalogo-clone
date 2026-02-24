@@ -63,9 +63,9 @@ export async function POST(req: Request) {
   }
 
   const customer_name =
-    body?.customer_name != null ? String(body.customer_name) : null;
+    body?.customer?.name ?? body?.customer_name ?? null;
   const customer_phone =
-    body?.customer_phone != null ? String(body.customer_phone) : null;
+    body?.customer?.phone ?? body?.customer_phone ?? null;
 
   // 1) cria pedido
   const { data: order, error: orderErr } = await supabase
@@ -84,7 +84,7 @@ export async function POST(req: Request) {
   // 2) cria itens
   const rows = items.map((it: any) => ({
     order_id: order.id,
-    product_id: String(it.product_id),
+    product_id: String(it.product_id ?? it.productId),
     price: Number(it.price),
     quantity: Number(it.quantity ?? 1),
   }));
