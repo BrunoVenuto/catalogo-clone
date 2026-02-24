@@ -1,5 +1,5 @@
 import SeedButton from "./SeedButton";
-import { headers } from "next/headers";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type Stats = {
   totalOrders: number;
@@ -13,28 +13,94 @@ function money(v: number) {
 }
 
 export default async function AdminPage() {
-  const h = await headers();
-  const host = h.get("host");
-  const proto = process.env.NODE_ENV === "development" ? "http" : "https";
-  const base = host ? `${proto}://${host}` : "";
+  const supabase = await createSupabaseServerClient();
+  let stats: Stats = { totalOrders: 0, totalRevenue: 0, topProducts: [], lastOrders: [] };
 
-  const res = await fetch(`${base}/api/admin/stats`, {
-    cache: "no-store",
-    headers: {
-      cookie: h.toString() // forward all headers including cookies to the API route!
+  try {
+    const { count: totalOrders } = await supabase
+      .from("orders")
+      .select("*", { count: "exact", head: true });
+
+    const { data: allItems } = await supabase
+      .from("order_items")
+      .select(`
+        product_id,
+        price,
+        quantity,
+        products ( name )
+      `);
+
+    let totalRevenue = 0;
+    const productStats: Record<string, { name: string; quantity: number; revenue: number }> = {};
+
+    if (allItems) {
+      for (const item of allItems) {
+        const lineTotal = item.price * item.quantity;
+        totalRevenue += lineTotal;
+
+        const pId = item.product_id;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const pName = (item.products as any)?.name || "Produto Desconhecido";
+
+        if (!productStats[pId]) {
+          productStats[pId] = { name: pName, quantity: 0, revenue: 0 };
+        }
+        productStats[pId].quantity += item.quantity;
+        productStats[pId].revenue += lineTotal;
+      }
     }
-  });
 
-  let stats: Stats;
-  if (res.ok) {
-    stats = (await res.json()) as Stats;
-  } else {
+    const topProducts = Object.entries(productStats)
+      .map(([productId, pstats]) => ({
+        productId,
+        ...pstats
+      }))
+      .sort((a, b) => b.revenue - a.revenue)
+      .slice(0, 5);
+
+    const { data: lastOrdersData } = await supabase
+      .from("orders")
+      .select(`
+        id,
+        created_at,
+        order_items (
+          quantity,
+          price,
+          products ( name )
+        )
+      `)
+      .order("created_at", { ascending: false })
+      .limit(5);
+
+    const lastOrders = (lastOrdersData || []).map(order => {
+      let total = 0;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const items = (order.order_items || []).map((it: any) => {
+        total += it.price * it.quantity;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const name = (it.products as any)?.name || "Produto Desconhecido";
+        return {
+          name,
+          quantity: it.quantity
+        };
+      });
+
+      return {
+        id: order.id,
+        createdAt: order.created_at,
+        total,
+        items
+      };
+    });
+
     stats = {
-      totalOrders: 0,
-      totalRevenue: 0,
-      topProducts: [],
-      lastOrders: [],
+      totalOrders: totalOrders ?? 0,
+      totalRevenue,
+      topProducts,
+      lastOrders,
     };
+  } catch (error) {
+    console.error("Failed to load DB stats directly in admin page", error);
   }
 
   return (
