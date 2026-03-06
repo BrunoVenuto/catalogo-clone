@@ -16,24 +16,28 @@ export default function Header() {
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35, ease: "easeOut" }}
-        className="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-white/10"
+        className="sticky top-0 z-50 bg-neutral-950/80 backdrop-blur-md border-b-[2px] border-cyan-500/30 w-full"
       >
+        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50"></div>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 sm:h-18 md:h-20 flex items-center justify-between">
+
           {/* LOGO + NOME */}
-          <Link href="/" className="flex items-center gap-3 min-w-0">
+          <Link href="/" className="flex items-center gap-4 min-w-0 group">
             <div
               className="
                 relative
-                h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12
+                h-10 w-10 sm:h-12 sm:w-12
                 shrink-0
-                rounded-xl
+                cyber-clip-reverse
                 overflow-hidden
-                ring-1 ring-white/10
-                bg-white/5
+                border border-cyan-400
+                bg-cyan-500/10
+                group-hover:shadow-[0_0_15px_rgba(34,211,238,0.5)]
+                transition-all duration-300
               "
             >
               <Image
-                src="/images/logo.jpeg"
+                src="/images/logo-desktop.jpg"
                 alt={`${siteConfig.name} logo`}
                 fill
                 className="object-cover"
@@ -41,32 +45,36 @@ export default function Header() {
               />
             </div>
 
-            <span
-              className="
-                truncate
-                text-base sm:text-lg md:text-xl
-                font-extrabold tracking-wide
-                bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500
-                bg-clip-text text-transparent
-                drop-shadow-[0_0_8px_rgba(250,204,21,0.55)]
-              "
-            >
-              {siteConfig.name}
-            </span>
+            <div className="flex flex-col">
+              <span
+                className="
+                   truncate
+                   text-lg sm:text-xl
+                   font-black tracking-widest uppercase
+                   text-cyan-400 cyber-glow-text
+                   group-hover:text-white transition-colors duration-300
+                 "
+              >
+                {siteConfig.name}
+              </span>
+              <span className="text-[10px] font-mono text-fuchsia-400 tracking-[0.2em] hidden sm:block uppercase">
+                 /// SYSTEM ENABLED
+              </span>
+            </div>
           </Link>
 
           {/* MENU (aparece no tablet e desktop) */}
-          <nav className="hidden sm:flex items-center gap-5 md:gap-8 text-sm text-neutral-300">
-            <Link href="/" className="hover:text-white transition">
+          <nav className="hidden sm:flex items-center gap-8 text-sm font-mono tracking-widest uppercase text-neutral-400">
+            <Link href="/" className="hover:text-cyan-400 hover:text-shadow-[0_0_8px_rgba(34,211,238,0.6)] transition-all">
               Home
             </Link>
-            <Link href="/#collections" className="hover:text-white transition">
+            <Link href="/#collections" className="hover:text-cyan-400 transition-all">
               Coleções
             </Link>
-            <Link href="/#products" className="hover:text-white transition">
+            <Link href="/#products" className="hover:text-cyan-400 transition-all">
               Produtos
             </Link>
-            <Link href="/#contact" className="hover:text-white transition">
+            <Link href="/#contact" className="hover:text-cyan-400 transition-all">
               Contato
             </Link>
 
@@ -76,25 +84,27 @@ export default function Header() {
                 document.dispatchEvent(new Event("open-consultoria"))
               }
               className="
-                ml-2
-                bg-yellow-400 text-black
-                px-4 py-2 rounded-lg
-                font-bold
-                hover:brightness-110 transition
-                text-sm
+                ml-4 relative
+                bg-fuchsia-600/10 text-fuchsia-400
+                border border-fuchsia-500
+                px-6 py-2 
+                font-black uppercase cyber-clip
+                hover:bg-fuchsia-600 hover:text-black hover:shadow-[0_0_15px_rgba(217,70,239,0.5)] transition-all
               "
             >
-              💬 Consultoria
+              Consultoria
+              {/* Terminal cursor blink effect */}
+              <span className="inline-block w-2 h-4 bg-fuchsia-400 ml-2 animate-pulse align-middle"></span>
             </button>
           </nav>
 
           {/* HAMBURGUER (somente mobile) */}
           <button
             onClick={() => setOpen(true)}
-            className="sm:hidden text-white text-3xl leading-none"
+            className="sm:hidden text-cyan-400 text-3xl leading-none font-mono tracking-tighter"
             aria-label="Abrir menu"
           >
-            ☰
+            [=]
           </button>
         </div>
       </motion.header>
@@ -103,30 +113,33 @@ export default function Header() {
       <AnimatePresence>
         {open && (
           <motion.div
-            className="fixed inset-0 z-50 bg-black/60"
+            className="fixed inset-0 z-50 bg-neutral-950/90 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setOpen(false)}
           >
             <motion.div
-              className="absolute top-0 right-0 w-[85vw] max-w-xs h-full bg-neutral-950 p-6"
+              className="absolute top-0 right-0 w-[85vw] max-w-sm h-full bg-neutral-950 border-l border-cyan-500/30 p-8 shadow-[-10px_0_30px_rgba(34,211,238,0.1)]"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ duration: 0.28 }}
+              transition={{ duration: 0.28, type: "spring", stiffness: 200, damping: 25 }}
               onClick={(e) => e.stopPropagation()}
             >
+              {/* Decorative scanline */}
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
+
               {/* TOPO */}
-              <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center justify-between mb-12 border-b border-white/10 pb-6">
                 <Link
                   href="/"
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 min-w-0"
+                  className="flex items-center gap-4 min-w-0"
                 >
-                  <div className="relative h-10 w-10 shrink-0 rounded-xl overflow-hidden ring-1 ring-white/10 bg-white/5">
+                  <div className="relative h-12 w-12 shrink-0 cyber-clip-reverse overflow-hidden border border-cyan-400 bg-cyan-500/10">
                     <Image
-                      src="/images/logo.jpeg"
+                      src="/images/logo-mobile.jpg"
                       alt={`${siteConfig.name} logo`}
                       fill
                       className="object-cover"
@@ -137,9 +150,8 @@ export default function Header() {
                   <span
                     className="
                       truncate
-                      text-lg font-extrabold
-                      bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500
-                      bg-clip-text text-transparent
+                      text-xl font-black uppercase
+                      text-cyan-400 cyber-glow-text
                     "
                   >
                     {siteConfig.name}
@@ -148,42 +160,42 @@ export default function Header() {
 
                 <button
                   onClick={() => setOpen(false)}
-                  className="text-white text-2xl"
+                  className="text-fuchsia-400 font-mono text-xl cyber-clip p-2 border border-fuchsia-500/30 hover:bg-fuchsia-500/20 transition-colors"
                   aria-label="Fechar menu"
                 >
-                  ✕
+                  [X]
                 </button>
               </div>
 
               {/* NAV MOBILE */}
-              <nav className="flex flex-col gap-5 text-lg text-neutral-200">
+              <nav className="flex flex-col gap-6 text-xl font-mono uppercase tracking-widest text-neutral-400">
                 <Link
                   href="/"
                   onClick={() => setOpen(false)}
-                  className="hover:text-white transition"
+                  className="hover:text-cyan-400 transition-colors border-l-2 border-transparent hover:border-cyan-400 pl-4"
                 >
-                  Home
+                  <span className="text-cyan-500 mr-2 opacity-50">#</span>Home
                 </Link>
                 <Link
                   href="/#collections"
                   onClick={() => setOpen(false)}
-                  className="hover:text-white transition"
+                  className="hover:text-cyan-400 transition-colors border-l-2 border-transparent hover:border-cyan-400 pl-4"
                 >
-                  Coleções
+                  <span className="text-cyan-500 mr-2 opacity-50">#</span>Coleções
                 </Link>
                 <Link
                   href="/#products"
                   onClick={() => setOpen(false)}
-                  className="hover:text-white transition"
+                  className="hover:text-cyan-400 transition-colors border-l-2 border-transparent hover:border-cyan-400 pl-4"
                 >
-                  Produtos
+                  <span className="text-cyan-500 mr-2 opacity-50">#</span>Produtos
                 </Link>
                 <Link
                   href="/#contact"
                   onClick={() => setOpen(false)}
-                  className="hover:text-white transition"
+                  className="hover:text-cyan-400 transition-colors border-l-2 border-transparent hover:border-cyan-400 pl-4"
                 >
-                  Contato
+                  <span className="text-cyan-500 mr-2 opacity-50">#</span>Contato
                 </Link>
 
                 {/* CTA MOBILE */}
@@ -193,14 +205,15 @@ export default function Header() {
                     document.dispatchEvent(new Event("open-consultoria"));
                   }}
                   className="
-                    mt-4
-                    bg-yellow-400 text-black
-                    py-3 rounded-lg
-                    font-bold
-                    hover:brightness-110 transition
+                    mt-8 relative
+                    bg-fuchsia-600/10 text-fuchsia-400
+                    border border-fuchsia-500
+                    py-4 text-center
+                    font-black uppercase cyber-clip
+                    hover:bg-fuchsia-600 hover:text-black hover:shadow-[0_0_15px_rgba(217,70,239,0.5)] transition-all
                   "
                 >
-                  💬 Solicitar consultoria
+                  Consultoria
                 </button>
               </nav>
             </motion.div>

@@ -53,10 +53,11 @@ export default function ProductModal({
               {product.name}
             </h2>
 
-            {/* PREÇO */}
-            <p className="text-green-400 font-semibold mb-6 text-center">
-              R$ {product.price.toFixed(2)}
-            </p>
+            <div className="flex justify-center">
+              <p className="text-fuchsia-400 font-semibold mb-6 text-center">
+                🛒 Deseja adicionar este item ao seu pedido?
+              </p>
+            </div>
 
             {/* BOTÃO */}
             <button
@@ -64,7 +65,7 @@ export default function ProductModal({
                 onAddToCart();
                 onClose();
               }}
-              className="w-full bg-green-600 text-black py-3 rounded-lg font-bold hover:brightness-110 transition"
+              className="w-full bg-fuchsia-600 text-black py-3 rounded-lg font-bold hover:brightness-110 transition"
             >
               Adicionar ao orçamento
             </button>

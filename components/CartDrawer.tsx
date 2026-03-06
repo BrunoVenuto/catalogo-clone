@@ -73,14 +73,11 @@ export default function CartDrawer() {
     setItems([]);
   }
 
-  // ✅ Pedido: recebe todos os campos do modal
   async function handleConfirmPedido(data: PedidoLeadData) {
     const productsText = items
       .map((item) => `- ${item.name} — R$ ${Number(item.price).toFixed(2)}`)
       .join("\n");
 
-    // ✅ Registra o pedido para o painel /admin (pedido "real" = checkout/enviar pedido)
-    // O carrinho armazena itens repetidos; aqui agregamos por produto para obter quantidade correta.
     try {
       const agg = new Map<string, { productId: string; name: string; price: number; quantity: number }>();
 
@@ -98,34 +95,28 @@ export default function CartDrawer() {
 
       const orderItems = Array.from(agg.values());
 
-      // Envia para a API (server) persistir e gerar métricas
-      await fetch("/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: orderItems,
-          total,
-          source: "checkout",
-          customer: {
-            name: data.name,
-            phone: data.phone,
-            cep: data.cep,
-            cpf: data.cpf,
-            city: data.city,
-          },
-        }),
+      const { addOrder } = await import('@/services/orders');
+
+      await addOrder({
+        items: orderItems,
+        total,
+        source: "whatsapp",
+        customer: {
+          name: data.name,
+          phone: data.phone,
+          cep: data.cep,
+          cpf: data.cpf,
+          city: data.city,
+        }
       });
     } catch (err) {
       console.error("Falha ao registrar pedido no painel:", err);
-      // Não bloqueia o pedido no WhatsApp, mas avisa.
       alert("Não foi possível registrar o pedido no painel. Seu pedido no WhatsApp será enviado mesmo assim.");
     }
 
-
-    // ✅ Sem a frase "COPIE ESSA MENSAGEM E EDITE"
     const message =
-      `NOVO PEDIDO\n\n` +
-      `DADOS DO CLIENTE\n` +
+      `[ NOVO PEDIDO ]\n\n` +
+      `DADOS DO CLONE:\n` +
       `Nome: ${data.name}\n` +
       `CEP: ${data.cep}\n` +
       `Telefone (DDD): ${data.phone}\n` +
@@ -134,10 +125,10 @@ export default function CartDrawer() {
       `Número: ${data.number}\n` +
       `Bairro: ${data.neighborhood}\n` +
       `Cidade: ${data.city}\n` +
-      `Ponto de referência: ${data.reference || "—"}\n\n` +
-      `PRODUTOS\n${productsText}\n\n` +
+      `Pto. de Referência: ${data.reference || "—"}\n\n` +
+      `CARGA DE PRODUTOS:\n${productsText}\n\n` +
       `TOTAL: R$ ${total.toFixed(2)}\n\n` +
-      `Por favor, me envie a CHAVE PIX para pagamento.`;
+      `Aguardando Chave PIX.`;
 
     openWhatsApp(whatsappPedido, message);
 
@@ -152,10 +143,11 @@ export default function CartDrawer() {
 
   function handleConsultoriaSubmit(data: ConsultoriaData) {
     const message =
-      `Olá, meu nome é ${data.name}.\n` +
+      `LOG: Consultoria Requisitada.\n` +
+      `Nome: ${data.name}\n` +
       `Telefone: ${data.phone}\n` +
-      `Objetivo: ${data.goal}\n\n` +
-      `Gostaria de uma consultoria antes de fazer meu pedido.`;
+      `Parâmetro/Objetivo: ${data.goal}\n\n` +
+      `Aguardo análise de protocolo.`;
 
     openWhatsApp(whatsappConsultoria, message);
     setConsultoriaOpen(false);
@@ -166,15 +158,17 @@ export default function CartDrawer() {
   return (
     <>
       {/* BOTÃO DO CARRINHO */}
-      <button
-        onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-50 bg-green-600 w-14 h-14 rounded-full flex items-center justify-center"
-      >
-        🛒
-        <span className="absolute -top-1 -right-1 bg-black text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-          {items.length}
-        </span>
-      </button>
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-2">
+        <button
+          onClick={() => setOpen(true)}
+          className="bg-cyan-500/20 w-16 h-16 cyber-clip flex items-center justify-center border-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)] hover:scale-110 transition-transform relative group backdrop-blur-sm"
+        >
+          <span className="text-2xl filter drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]">🛒</span>
+          <span className="absolute -top-2 -right-2 bg-fuchsia-600 text-black font-black font-mono text-xs px-2 py-1 cyber-clip border border-fuchsia-400">
+            {items.length}
+          </span>
+        </button>
+      </div>
 
       {/* DRAWER */}
       <AnimatePresence>
@@ -187,33 +181,40 @@ export default function CartDrawer() {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="absolute right-0 top-0 h-full w-full max-w-md bg-neutral-950 p-6 text-white flex flex-col"
+              className="absolute right-0 top-0 h-full w-full max-w-md bg-neutral-950 p-6 text-white flex flex-col border-l-2 border-cyan-500/50 shadow-[-10px_0_30px_rgba(34,211,238,0.15)] cyber-clip-reverse"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.3, type: "spring", stiffness: 200, damping: 25 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold">Seu orçamento</h2>
-                <button onClick={() => setOpen(false)}>✕</button>
+              {/* Decorative Element */}
+              <div className="absolute top-0 right-0 w-1/2 h-1 bg-gradient-to-l from-fuchsia-500 to-transparent"></div>
+
+              <div className="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
+                <h2 className="text-2xl font-black uppercase text-cyan-400 tracking-wider">
+                  [ Inventário ]
+                </h2>
+                <button onClick={() => setOpen(false)} className="text-fuchsia-400 font-mono text-xl cyber-clip px-2 border border-fuchsia-500/30 hover:bg-fuchsia-500/20 transition-colors">
+                  X
+                </button>
               </div>
 
-              <div className="flex-1 space-y-4 overflow-auto">
+              <div className="flex-1 space-y-4 overflow-auto scrollbar-thin scrollbar-thumb-cyan-500 scrollbar-track-neutral-900 pr-2">
                 {items.map((item, index) => (
                   <div
                     key={`${item.name}-${index}`}
-                    className="flex justify-between border-b border-white/10 pb-2"
+                    className="flex justify-between items-center border border-white/5 bg-white/5 p-3 cyber-clip group hover:border-cyan-500/30 transition-colors"
                   >
-                    <div>
-                      <p>{item.name}</p>
-                      <p className="text-green-400 text-sm">
+                    <div className="flex-1">
+                      <p className="font-bold uppercase tracking-wide text-sm">{item.name}</p>
+                      <p className="text-yellow-400 font-mono text-xs mt-1">
                         R$ {Number(item.price).toFixed(2)}
                       </p>
                     </div>
                     <button
                       onClick={() => handleRemove(index)}
-                      className="text-red-500"
+                      className="text-fuchsia-500 font-mono text-lg hover:text-fuchsia-400 transition-colors px-2"
                     >
                       ✕
                     </button>
@@ -221,31 +222,32 @@ export default function CartDrawer() {
                 ))}
               </div>
 
-              <div className="mt-6 border-t border-white/10 pt-4 space-y-4">
-                <div className="flex justify-between font-bold">
-                  <span>Total</span>
-                  <span className="text-green-400">R$ {total.toFixed(2)}</span>
+              <div className="mt-8 border-t-[2px] border-cyan-500/30 pt-6 space-y-4 bg-neutral-950">
+                <div className="flex justify-between items-center text-xl font-black mb-6 border border-white/10 p-4 cyber-clip bg-white/5">
+                  <span className="uppercase tracking-widest text-neutral-400">Total:</span>
+                  <span className="text-yellow-500 font-mono text-2xl cyber-glow-text">R$ {total.toFixed(2)}</span>
                 </div>
 
                 <button
                   onClick={() => setPedidoOpen(true)}
-                  className="w-full bg-green-600 py-3 rounded-lg font-bold text-black"
+                  className="w-full bg-cyan-400 py-4 font-black text-black uppercase tracking-widest hover:bg-cyan-300 hover:shadow-[0_0_15px_rgba(34,211,238,0.5)] transition-all cyber-clip relative group overflow-hidden"
                 >
-                  Enviar pedido
+                  <div className="absolute inset-0 border-[3px] border-transparent group-hover:border-white/50 cyber-clip transition-colors"></div>
+                  Transmitir Pedido
                 </button>
 
                 <button
                   onClick={() => setConsultoriaOpen(true)}
-                  className="w-full bg-yellow-400 py-3 rounded-lg font-bold text-black"
+                  className="w-full border border-fuchsia-500 bg-fuchsia-600/10 py-3 font-black text-fuchsia-400 uppercase tracking-widest hover:bg-fuchsia-600 hover:text-black hover:shadow-[0_0_15px_rgba(217,70,239,0.5)] transition-all cyber-clip"
                 >
-                  💬 Solicitar consultoria
+                  Solicitar Protocolo
                 </button>
 
                 <button
                   onClick={handleClear}
-                  className="w-full border border-white/20 py-3 rounded-lg font-bold"
+                  className="w-full border border-neutral-700 py-3 text-neutral-400 font-mono text-sm tracking-widest hover:bg-red-900/30 hover:text-red-400 hover:border-red-500/50 transition-all cyber-clip uppercase"
                 >
-                  Limpar carrinho
+                  [ Ejetar Itens ]
                 </button>
               </div>
             </motion.div>

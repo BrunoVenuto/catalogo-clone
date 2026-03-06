@@ -1,55 +1,59 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/config/firebase";
+import { useRouter } from "next/navigation";
+import { getProducts, addProduct, updateProduct, deleteProduct, uploadImage } from "@/services/products";
 import type { Product } from "@/config/products";
 
 type Draft = {
-  id?: number;
+  id?: string | number;
   name: string;
-  price: string; // input
+  price: string;
   category: string;
   description: string;
-  image: string; // url or dataURL
-  active?: boolean;
+  image: string;
 };
 
 function emptyDraft(): Draft {
   return {
     name: "",
     price: "",
-    category: "Linha Gold",
+    category: "Suplementos",
     description: "",
     image: "",
-    active: true,
   };
 }
 
-async function fileToDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result || ""));
-    reader.onerror = () => reject(new Error("Falha ao ler arquivo"));
-    reader.readAsDataURL(file);
-  });
-}
-
 export default function AdminProdutosPage() {
+  const router = useRouter();
+  const [loadingAuth, setLoadingAuth] = useState(true);
   const [products, setProducts] = useState<Product[]>([]);
   const [draft, setDraft] = useState<Draft>(emptyDraft());
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | number | null>(null);
   const [search, setSearch] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
+  // AUTH CHECK
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        router.push("/admin");
+      } else {
+        setLoadingAuth(false);
+        refresh();
+      }
+    });
+    return () => unsub();
+  }, [router]);
 
   async function refresh() {
-    const res = await fetch("/api/products", { cache: "no-store" });
-    const data = await res.json().catch(() => ({}));
-    setProducts(Array.isArray(data.products) ? data.products : []);
+    const data = await getProducts();
+    setProducts(data);
   }
-
-  useEffect(() => {
-    refresh();
-  }, []);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -64,6 +68,7 @@ export default function AdminProdutosPage() {
   function startCreate() {
     setEditingId(null);
     setDraft(emptyDraft());
+    setImageFile(null);
     setError(null);
   }
 
@@ -76,36 +81,20 @@ export default function AdminProdutosPage() {
       category: p.category,
       description: p.description,
       image: p.image,
-      active: (p as any).active ?? true,
     });
+    setImageFile(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
     setError(null);
   }
 
-  async function removeProduct(id: number) {
-    if (!confirm("Excluir este produto?") ) return;
+  async function handleRemove(id: string | number) {
+    if (!confirm("[ ALERTA_SISTEMA ] Deseja expurgar este item do banco de dados permanentemente?")) return;
     setBusy(true);
-    setError(null);
-    const res = await fetch(`/api/products?id=${id}`, { method: "DELETE" });
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      setError(data?.error || "Falha ao excluir");
-    } else {
-      await refresh();
-    }
-    setBusy(false);
-  }
-
-  async function onPickFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setBusy(true);
-    setError(null);
     try {
-      const dataUrl = await fileToDataUrl(file);
-      setDraft((d) => ({ ...d, image: dataUrl }));
+      await deleteProduct(String(id));
+      await refresh();
     } catch (err: any) {
-      setError(err?.message || "Falha ao carregar imagem");
+      setError(err.message || "Falha ao excluir.");
     } finally {
       setBusy(false);
     }
@@ -115,220 +104,234 @@ export default function AdminProdutosPage() {
     setBusy(true);
     setError(null);
 
-    const payload: any = {
-      name: draft.name.trim(),
-      price: Number(draft.price),
-      category: draft.category.trim(),
-      description: draft.description.trim(),
-      image: draft.image,
-      active: draft.active ?? true,
-    };
+    try {
+      const parsedPrice = parseFloat(draft.price.replace(",", "."));
+      if (!draft.name || isNaN(parsedPrice)) {
+        throw new Error("Nome e Preço numérico são obrigatórios para a inserção.");
+      }
 
-    if (!payload.name || Number.isNaN(payload.price)) {
-      setError("Nome e preço são obrigatórios.");
+      let imageUrl = draft.image;
+
+      // Se houver um novo arquivo de imagem para upload
+      if (imageFile) {
+        imageUrl = await uploadImage(imageFile);
+      } else if (!imageUrl) {
+        // Fallback icon placeholder if no image provided
+        imageUrl = `https://placehold.co/400x400/0a0a0a/22d3ee/png?text=${draft.name.substring(0, 10).replace(/ /g, "+")}`;
+      }
+
+      const payload = {
+        name: draft.name.trim(),
+        price: parsedPrice,
+        category: draft.category.trim(),
+        description: draft.description.trim(),
+        image: imageUrl,
+      };
+
+      if (editingId != null) {
+        await updateProduct(String(editingId), payload);
+      } else {
+        await addProduct(payload);
+      }
+
+      await refresh();
+      startCreate();
+    } catch (err: any) {
+      setError(err?.message || "Falha ao salvar no banco de dados.");
+    } finally {
       setBusy(false);
-      return;
     }
+  }
 
-    const isEdit = editingId != null;
-    if (isEdit) payload.id = editingId;
-
-    const res = await fetch("/api/products", {
-      method: isEdit ? "PUT" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      setError(data?.error || "Falha ao salvar");
-      setBusy(false);
-      return;
-    }
-
-    await refresh();
-    startCreate();
-    setBusy(false);
+  if (loadingAuth) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 text-cyan-400 font-mono">
+        <span className="w-8 h-8 rounded-full border-4 border-cyan-500/30 border-t-cyan-400 animate-spin mb-4"></span>
+        [ VERIFICANDO CREDENCIAIS DE ACESSO... ]
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-8">
-      <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <h2 className="text-lg font-semibold">
-              {editingId ? "Editar produto" : "Novo produto"}
-            </h2>
-            <p className="text-sm text-zinc-300">
-              Produtos são salvos no Supabase (tabela <code>products</code>).
-            </p>
-          </div>
-          <button
-            onClick={refresh}
-            className="rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm"
-          >
-            Atualizar
-          </button>
-        </div>
-
-        <div className="mt-5 grid gap-3 md:grid-cols-2">
-          <label className="text-sm">
-            <span className="text-zinc-200">Nome</span>
-            <input
-              value={draft.name}
-              onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
-              className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none"
-            />
-          </label>
-
-          <label className="text-sm">
-            <span className="text-zinc-200">Preço</span>
-            <input
-              value={draft.price}
-              onChange={(e) => setDraft((d) => ({ ...d, price: e.target.value }))}
-              inputMode="decimal"
-              className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none"
-            />
-          </label>
-
-          <label className="text-sm">
-            <span className="text-zinc-200">Categoria</span>
-            <input
-              value={draft.category}
-              onChange={(e) => setDraft((d) => ({ ...d, category: e.target.value }))}
-              className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none"
-            />
-          </label>
-
-          <label className="text-sm">
-            <span className="text-zinc-200">Ativo</span>
-            <select
-              value={String(draft.active ?? true)}
-              onChange={(e) => setDraft((d) => ({ ...d, active: e.target.value === "true" }))}
-              className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none"
-            >
-              <option value="true">Sim</option>
-              <option value="false">Não</option>
-            </select>
-          </label>
-
-          <label className="text-sm md:col-span-2">
-            <span className="text-zinc-200">Descrição</span>
-            <textarea
-              value={draft.description}
-              onChange={(e) => setDraft((d) => ({ ...d, description: e.target.value }))}
-              rows={4}
-              className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none"
-            />
-          </label>
-
-          <div className="md:col-span-2">
-            <div className="flex flex-wrap items-center gap-3">
-              <label className="text-sm">
-                <span className="text-zinc-200">Imagem</span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={onPickFile}
-                  className="mt-1 block w-full text-sm"
-                />
-              </label>
-
-              <label className="text-sm flex-1">
-                <span className="text-zinc-200">Ou URL/Base64</span>
-                <input
-                  value={draft.image}
-                  onChange={(e) => setDraft((d) => ({ ...d, image: e.target.value }))}
-                  className="mt-1 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none"
-                  placeholder="https://... ou data:image/...base64"
-                />
-              </label>
-            </div>
-
-            {draft.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={draft.image}
-                alt="Preview"
-                className="mt-3 h-40 w-40 rounded-xl object-cover border border-zinc-800"
-              />
-            ) : null}
-          </div>
-
-          {error ? (
-            <div className="md:col-span-2 rounded-xl border border-red-900/60 bg-red-950/40 px-3 py-2 text-sm text-red-200">
-              {error}
-            </div>
-          ) : null}
-
-          <div className="md:col-span-2 flex flex-wrap gap-2">
-            <button
-              onClick={save}
-              disabled={busy}
-              className="rounded-xl bg-zinc-50 px-4 py-2 text-sm font-semibold text-zinc-900 disabled:opacity-60"
-            >
-              {busy ? "Salvando..." : editingId ? "Salvar alterações" : "Criar"}
-            </button>
-            <button
-              onClick={startCreate}
-              className="rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-2 text-sm"
-            >
-              Limpar
-            </button>
-          </div>
+    <div className="space-y-12 font-mono animate-in fade-in duration-500 pb-20">
+      {/* HEADER PAGE */}
+      <div className="flex items-center justify-between border-l-4 border-fuchsia-500 pl-4 py-2 bg-gradient-to-r from-fuchsia-900/20 to-transparent">
+        <div>
+          <h2 className="text-2xl font-bold text-white uppercase tracking-wider">GERENCIAMENTO_DE_INVENTÁRIO</h2>
+          <p className="text-sm text-fuchsia-400 mt-1">[ Modificação de Registros Core ]</p>
         </div>
       </div>
 
-      <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-        <div className="flex items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold">Produtos</h2>
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar..."
-            className="w-64 max-w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm outline-none"
-          />
-        </div>
+      <div className="grid lg:grid-cols-3 gap-8">
 
-        <div className="mt-4 grid gap-3">
-          {filtered.map((p) => (
-            <div
-              key={p.id}
-              className="flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-950 p-4 md:flex-row md:items-center md:justify-between"
-            >
-              <div className="flex items-center gap-3">
-                {p.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.image} alt={p.name} className="h-14 w-14 rounded-xl object-cover" />
-                ) : (
-                  <div className="h-14 w-14 rounded-xl border border-zinc-800" />
-                )}
-                <div>
-                  <div className="font-semibold">{p.name}</div>
-                  <div className="text-sm text-zinc-300">
-                    {p.category} · R$ {Number(p.price).toFixed(2)} · {(p as any).active === false ? "Inativo" : "Ativo"}
-                  </div>
-                </div>
+        {/* FORMULÁRIO */}
+        <div className="lg:col-span-1 border border-white/10 bg-neutral-900/50 backdrop-blur-sm p-6 cyber-clip self-start sticky top-6">
+          <h3 className="text-xl font-bold text-cyan-400 mb-6 uppercase tracking-widest border-b border-white/10 pb-4 flex justify-between items-center">
+            {editingId ? "++ UPDATE_ITEM ++" : "++ CREATE_ITEM ++"}
+            {editingId && (
+              <button onClick={startCreate} className="text-xs text-white bg-red-900/50 border border-red-500 px-2 py-1 hover:bg-red-500 cyber-clip">
+                CANCELAR
+              </button>
+            )}
+          </h3>
+
+          <div className="space-y-4 text-sm mt-4">
+            <div>
+              <label className="block text-neutral-400 uppercase tracking-widest mb-1 text-xs">Identificador_Nome</label>
+              <input
+                value={draft.name}
+                onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
+                className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-cyan-400 transition-colors"
+                placeholder="NOME DO PRODUTO"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-neutral-400 uppercase tracking-widest mb-1 text-xs">Valor</label>
+                <input
+                  value={draft.price}
+                  onChange={(e) => setDraft((d) => ({ ...d, price: e.target.value }))}
+                  inputMode="decimal"
+                  className="w-full bg-black border border-white/10 p-3 text-yellow-400 font-bold focus:outline-none focus:border-yellow-400 transition-colors"
+                  placeholder="0.00"
+                />
               </div>
-
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => startEdit(p)}
-                  className="rounded-xl border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm"
-                >
-                  Editar
-                </button>
-                <button
-                  onClick={() => removeProduct(p.id)}
-                  disabled={busy}
-                  className="rounded-xl border border-red-900/60 bg-red-950/40 px-3 py-2 text-sm text-red-200 disabled:opacity-60"
-                >
-                  Excluir
-                </button>
+              <div>
+                <label className="block text-neutral-400 uppercase tracking-widest mb-1 text-xs">Classe</label>
+                <input
+                  value={draft.category}
+                  onChange={(e) => setDraft((d) => ({ ...d, category: e.target.value }))}
+                  className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-cyan-400 transition-colors"
+                  placeholder="Suplementos"
+                />
               </div>
             </div>
-          ))}
+
+            <div>
+              <label className="block text-neutral-400 uppercase tracking-widest mb-1 text-xs">Log_de_Descrição</label>
+              <textarea
+                value={draft.description}
+                onChange={(e) => setDraft((d) => ({ ...d, description: e.target.value }))}
+                rows={4}
+                className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-cyan-400 transition-colors resize-none"
+                placeholder="Detalhes técnicos do item..."
+              />
+            </div>
+
+            <div className="border border-white/10 p-4 bg-black/50">
+              <label className="block text-neutral-400 uppercase tracking-widest mb-2 text-xs">Upload_de_Imagem</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    setImageFile(e.target.files[0]);
+                  }
+                }}
+                className="w-full text-xs text-neutral-400 file:mr-4 file:py-2 file:px-4 file:bg-cyan-900/30 file:text-cyan-400 file:border-0 file:font-mono hover:file:bg-cyan-800 transition-colors cursor-pointer"
+              />
+
+              <div className="mt-4 text-center">
+                <span className="text-xs text-neutral-500 uppercase">OU INSIRA UMA URL DIRETA</span>
+              </div>
+
+              <input
+                value={draft.image}
+                onChange={(e) => setDraft((d) => ({ ...d, image: e.target.value }))}
+                className="mt-2 w-full bg-black border border-white/10 p-2 text-white focus:outline-none focus:border-cyan-400 text-xs"
+                placeholder="https://..."
+              />
+
+              {/* PREVIEW */}
+              {(imageFile || draft.image) && (
+                <div className="mt-4 border border-cyan-500/30 p-1 cyber-clip w-32 mx-auto">
+                  <img
+                    src={imageFile ? URL.createObjectURL(imageFile) : draft.image}
+                    alt="Preview"
+                    className="w-full aspect-square object-cover filter grayscale hover:grayscale-0 transition-all cyber-clip"
+                  />
+                </div>
+              )}
+            </div>
+
+            {error && (
+              <div className="bg-red-950/50 border border-red-500 p-3 mt-4 text-xs text-red-400 animate-pulse uppercase text-center font-bold">
+                [ERRO] {error}
+              </div>
+            )}
+
+            <button
+              onClick={save}
+              disabled={busy}
+              className="mt-6 w-full bg-cyan-600/20 border border-cyan-500 text-cyan-400 py-4 font-bold uppercase tracking-widest hover:bg-cyan-400 hover:text-black transition-all cyber-clip disabled:opacity-50"
+            >
+              {busy ? "PROCESSANDO..." : editingId ? "[ CONFIRMAR UPDATE ]" : "[ INJETAR NOVO ITEM ]"}
+            </button>
+          </div>
         </div>
+
+        {/* LISTA DE PRODUTOS */}
+        <div className="lg:col-span-2">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-lg font-bold text-neutral-300 uppercase tracking-widest">
+              REGISTROS_ATIVOS ({products.length})
+            </h3>
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="BUSCAR [ NOME, CLASSE ]"
+              className="w-64 bg-black border border-white/20 p-2 text-white text-sm focus:outline-none focus:border-cyan-400 cyber-clip-reverse"
+            />
+          </div>
+
+          <div className="grid gap-4">
+            {filtered.map((p) => (
+              <div
+                key={p.id}
+                className="flex flex-col md:flex-row items-center justify-between border border-white/5 bg-neutral-900 overflow-hidden hover:border-cyan-500/30 transition-colors group p-4 gap-4"
+              >
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                  <div className="w-16 h-16 flex-shrink-0 border border-white/10 cyber-clip relative bg-black">
+                    {p.image && <img src={p.image} alt={p.name} className="absolute inset-0 w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition" />}
+                  </div>
+                  <div>
+                    <p className="font-bold text-white text-lg tracking-wider group-hover:text-cyan-400 transition-colors">
+                      {p.name}
+                    </p>
+                    <div className="text-xs text-neutral-500 uppercase tracking-widest mt-1">
+                      <span className="text-yellow-400 mr-2 border-b border-yellow-400/30 font-bold">R$ {Number(p.price).toFixed(2)}</span>
+                      | CLASSE: {p.category}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex w-full md:w-auto gap-2 text-xs font-bold uppercase tracking-wider">
+                  <button
+                    onClick={() => startEdit(p)}
+                    className="flex-1 md:flex-none border border-cyan-500/50 bg-cyan-900/20 text-cyan-400 px-4 py-2 hover:bg-cyan-500 hover:text-black transition-colors"
+                  >
+                    EDIT
+                  </button>
+                  <button
+                    onClick={() => handleRemove(p.id)}
+                    disabled={busy}
+                    className="flex-1 md:flex-none border border-red-500/50 bg-red-900/20 text-red-400 px-4 py-2 hover:bg-red-500 hover:text-white transition-colors"
+                  >
+                    DEL
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {filtered.length === 0 && (
+              <div className="p-12 text-center text-neutral-500 border border-dashed border-white/10">
+                {"< NENHUM_REGISTRO_ENCONTRADO />"}
+              </div>
+            )}
+          </div>
+        </div>
+
       </div>
     </div>
   );

@@ -1,203 +1,230 @@
-export const dynamic = "force-dynamic";
+"use client";
 
-import SeedButton from "./SeedButton";
-import { createClient } from "@supabase/supabase-js";
-
-type Stats = {
-  totalOrders: number;
-  totalRevenue: number;
-  topProducts: Array<{ productId: string; name: string; quantity: number; revenue: number }>;
-  lastOrders: Array<{ id: string; createdAt: string; total: number; items: Array<{ name: string; quantity: number }> }>;
-};
+import { useEffect, useState } from "react";
+import { onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from "firebase/auth";
+import { auth } from "@/config/firebase";
+import Link from "next/link";
+import { getProducts } from "@/services/products";
+import { getDashboardStats } from "@/services/orders";
 
 function money(v: number) {
   return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v || 0);
 }
 
-export default async function AdminPage() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-  let stats: Stats = { totalOrders: 0, totalRevenue: 0, topProducts: [], lastOrders: [] };
+export default function AdminPage() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  try {
-    const { count: totalOrders } = await supabase
-      .from("orders")
-      .select("*", { count: "exact", head: true });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [authError, setAuthError] = useState("");
 
-    const { data: allItems } = await supabase
-      .from("order_items")
-      .select(`
-        order_id,
-        product_id,
-        price,
-        quantity
-      `);
+  const [productsCount, setProductsCount] = useState(0);
+  const [stats, setStats] = useState({
+    totalOrders: 0,
+    totalRevenue: 0,
+    todayRevenue: 0,
+    topProducts: [] as Array<{ name: string, quantity: number, revenue: number }>,
+    lastOrders: [] as Array<any>
+  });
 
-    const { data: allProducts } = await supabase
-      .from("products")
-      .select("id, name");
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        // Load basic stats
+        const prods = await getProducts();
+        setProductsCount(prods.length);
 
-    const productNames = new Map<string, string>();
-    if (allProducts) {
-      for (const p of allProducts) {
-        productNames.set(String(p.id), p.name);
+        const orderStats = await getDashboardStats();
+        setStats(orderStats);
       }
-    }
-
-    let totalRevenue = 0;
-    const productStats: Record<string, { name: string; quantity: number; revenue: number }> = {};
-
-    if (allItems) {
-      for (const item of allItems) {
-        const lineTotal = item.price * item.quantity;
-        totalRevenue += lineTotal;
-
-        const pId = String(item.product_id);
-        const pName = productNames.get(pId) || "Produto Desconhecido";
-
-        if (!productStats[pId]) {
-          productStats[pId] = { name: pName, quantity: 0, revenue: 0 };
-        }
-        productStats[pId].quantity += item.quantity;
-        productStats[pId].revenue += lineTotal;
-      }
-    }
-
-    const topProducts = Object.entries(productStats)
-      .map(([productId, pstats]) => ({
-        productId,
-        ...pstats
-      }))
-      .sort((a, b) => b.revenue - a.revenue)
-      .slice(0, 5);
-
-    const { data: lastOrdersData } = await supabase
-      .from("orders")
-      .select(`
-        id,
-        created_at
-      `)
-      .order("created_at", { ascending: false })
-      .limit(5);
-
-    const lastOrders = (lastOrdersData || []).map(order => {
-      let total = 0;
-
-      // Encontrar apenas os itens deste pedido em memória
-      const itemsOfThisOrder = (allItems || []).filter(it => String(it.order_id) === String(order.id));
-
-      const items = itemsOfThisOrder.map((it) => {
-        total += it.price * it.quantity;
-        const name = productNames.get(String(it.product_id)) || "Produto Desconhecido";
-        return {
-          name,
-          quantity: it.quantity
-        };
-      });
-
-      return {
-        id: order.id,
-        createdAt: order.created_at,
-        total,
-        items
-      };
+      setLoading(false);
     });
+    return () => unsubscribe();
+  }, []);
 
-    stats = {
-      totalOrders: totalOrders ?? 0,
-      totalRevenue,
-      topProducts,
-      lastOrders,
-    };
-  } catch (error) {
-    console.error("Failed to load DB stats directly in admin page", error);
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError("");
+    setLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err: any) {
+      setAuthError("Credential rejection: " + err.message);
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 text-cyan-400 font-mono">
+        <span className="w-8 h-8 rounded-full border-4 border-cyan-500/30 border-t-cyan-400 animate-spin mb-4"></span>
+        [ INICIANDO PROTOCOLO DE AUTENTICAÇÃO... ]
+      </div>
+    );
   }
 
+  // --- LOGIN SCREEN ---
+  if (!user) {
+    return (
+      <div className="max-w-md mx-auto mt-20 p-8 bg-black/80 backdrop-blur-md border border-fuchsia-500/30 cyber-clip relative shadow-[0_0_30px_rgba(217,70,239,0.1)]">
+        {/* Borders */}
+        <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-fuchsia-500/50 m-2 pointer-events-none"></div>
+        <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-cyan-500/50 m-2 pointer-events-none"></div>
+
+        <h2 className="text-2xl font-black font-mono text-fuchsia-500 tracking-wider mb-6 text-center uppercase">
+          {"<"} IDENTITY_CHECK {">"}
+        </h2>
+
+        {authError && (
+          <div className="bg-red-950/50 border border-red-500 p-3 mb-6 font-mono text-xs text-red-400 animate-pulse">
+            [ERRO_SISTÊMICO] {authError}
+          </div>
+        )}
+
+        <form onSubmit={handleLogin} className="flex flex-col gap-6 font-mono">
+          <div>
+            <label className="block text-cyan-400 text-xs tracking-widest uppercase mb-2">
+              Credencial_Origem_Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-neutral-900 border border-white/20 p-3 text-white focus:outline-none focus:border-cyan-400 transition-colors"
+              placeholder="admin@nexus.com"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-cyan-400 text-xs tracking-widest uppercase mb-2">
+              Chave_Padrão_Senha
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-neutral-900 border border-white/20 p-3 text-white focus:outline-none focus:border-cyan-400 transition-colors"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="mt-4 bg-fuchsia-600/20 border border-fuchsia-500 text-fuchsia-400 py-3 font-bold uppercase tracking-wider hover:bg-fuchsia-500 hover:text-black transition-all cyber-clip"
+          >
+            [ FORNECER ACESSO ]
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  // --- DASHBOARD OVERVIEW ---
   return (
-    <main className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="text-sm text-zinc-300">
-          Dica: gere pedidos de exemplo para testar agora.
+    <div className="space-y-8 font-mono animate-in fade-in duration-500">
+      <div className="flex items-center justify-between border-l-4 border-cyan-500 pl-4 py-2 bg-gradient-to-r from-cyan-900/20 to-transparent">
+        <div>
+          <h2 className="text-2xl font-bold text-white uppercase tracking-wider">Status do Sistema</h2>
+          <p className="text-sm text-cyan-400 mt-1">Bem-vindo(a), {user.email}</p>
         </div>
-        <SeedButton />
+        <button onClick={handleLogout} className="text-xs text-neutral-400 hover:text-fuchsia-400 uppercase tracking-widest transition-colors border-b border-transparent hover:border-fuchsia-400">
+          [X] Encerrar_Sessão
+        </button>
       </div>
 
-      <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
-          <div className="text-sm text-zinc-400">Pedidos</div>
-          <div className="mt-2 text-3xl font-semibold">{stats.totalOrders}</div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
+        <div className="bg-neutral-900 border border-white/10 cyber-clip p-6 hover:border-cyan-500/50 transition-colors group">
+          <h3 className="text-sm text-neutral-400 uppercase tracking-widest mb-4 group-hover:text-cyan-400">
+            Faturamento Hoje
+          </h3>
+          <p className="text-3xl lg:text-4xl font-black text-white">{money(stats.todayRevenue)}</p>
         </div>
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
-          <div className="text-sm text-zinc-400">Faturamento</div>
-          <div className="mt-2 text-3xl font-semibold">{money(stats.totalRevenue)}</div>
-        </div>
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
-          <div className="text-sm text-zinc-400">Produtos campeões</div>
-          <div className="mt-2 text-3xl font-semibold">{stats.topProducts?.length ?? 0}</div>
-        </div>
-      </section>
 
-      <section className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
-          <h2 className="mb-4 text-base font-semibold">Top produtos (por faturamento)</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="text-left text-zinc-400">
-                <tr>
-                  <th className="py-2">Produto</th>
-                  <th className="py-2">Qtd</th>
-                  <th className="py-2">Faturou</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stats.topProducts?.map((p) => (
-                  <tr key={p.productId} className="border-t border-zinc-800">
-                    <td className="py-2 pr-4">{p.name}</td>
-                    <td className="py-2">{p.quantity}</td>
-                    <td className="py-2">{money(p.revenue)}</td>
-                  </tr>
-                ))}
-                {(!stats.topProducts || stats.topProducts.length === 0) && (
-                  <tr>
-                    <td className="py-3 text-zinc-400" colSpan={3}>
-                      Sem dados ainda. Clique em “Gerar pedidos de exemplo”.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+        <div className="bg-neutral-900 border border-white/10 cyber-clip p-6 hover:border-cyan-500/50 transition-colors group">
+          <h3 className="text-sm text-neutral-400 uppercase tracking-widest mb-4 group-hover:text-cyan-400">
+            Faturamento Total
+          </h3>
+          <p className="text-3xl lg:text-4xl font-black text-white">{money(stats.totalRevenue)}</p>
+        </div>
+
+        <div className="bg-neutral-900 border border-white/10 cyber-clip p-6 hover:border-cyan-500/50 transition-colors group">
+          <h3 className="text-sm text-neutral-400 uppercase tracking-widest mb-4 group-hover:text-cyan-400">
+            Pedidos Gerados
+          </h3>
+          <p className="text-3xl lg:text-4xl font-black text-white">{stats.totalOrders}</p>
+        </div>
+
+        <div className="bg-neutral-900 border border-white/10 cyber-clip p-6 hover:border-cyan-500/50 transition-colors group flex flex-col justify-between">
+          <div>
+            <h3 className="text-sm text-neutral-400 uppercase tracking-widest mb-4 group-hover:text-cyan-400">
+              Produtos Indexados
+            </h3>
+            <p className="text-3xl lg:text-4xl font-black text-white">{productsCount}</p>
           </div>
+          <Link href="/admin/produtos" className="mt-4 inline-block text-cyan-500 text-sm hover:underline uppercase tracking-wide">
+            Gerenciar {">"}
+          </Link>
         </div>
+      </div>
 
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
-          <h2 className="mb-4 text-base font-semibold">Últimos pedidos</h2>
-          <div className="space-y-3">
-            {stats.lastOrders?.map((o) => (
-              <div key={o.id} className="rounded-xl border border-zinc-800 bg-zinc-950 p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="text-sm text-zinc-300">
-                    {new Date(o.createdAt).toLocaleString("pt-BR")}
-                  </div>
-                  <div className="text-sm font-semibold">{money(o.total)}</div>
-                </div>
-                <div className="mt-2 text-sm text-zinc-400">
-                  {(o.items || []).map((it, idx) => (
-                    <span key={idx}>
-                      {it.quantity}x {it.name}
-                      {idx < (o.items.length - 1) ? ", " : ""}
-                    </span>
-                  ))}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+        {/* TOP PRODUCTS */}
+        <div className="bg-neutral-900 border border-white/10 p-6 cyber-clip">
+          <h3 className="text-lg font-bold text-fuchsia-400 uppercase tracking-widest mb-6 border-b border-white/10 pb-4">
+            [ TOP 5 PRODUTOS VENDIDOS ]
+          </h3>
+
+          <div className="space-y-4 text-sm mt-4">
+            {stats.topProducts.map((p, index) => (
+              <div key={index} className="flex justify-between items-center border-b border-white/5 pb-2">
+                <span className="text-white truncate pr-4">
+                  {index + 1}. {p.name}
+                </span>
+                <div className="flex flex-col items-end text-right whitespace-nowrap">
+                  <span className="text-cyan-400 font-bold">{p.quantity} un.</span>
+                  <span className="text-neutral-500 uppercase text-xs">Fat: {money(p.revenue)}</span>
                 </div>
               </div>
             ))}
-            {(!stats.lastOrders || stats.lastOrders.length === 0) && (
-              <div className="text-sm text-zinc-400">Sem pedidos ainda.</div>
+            {stats.topProducts.length === 0 && (
+              <p className="text-neutral-500 text-center py-8">{"< NENHUM_DADO_ENCONTRADO />"}</p>
             )}
           </div>
         </div>
-      </section>
-    </main>
+
+        {/* LATEST ORDERS */}
+        <div className="bg-neutral-900 border border-white/10 p-6 cyber-clip">
+          <h3 className="text-lg font-bold text-cyan-400 uppercase tracking-widest mb-6 border-b border-white/10 pb-4">
+            [ ÚLTIMAS TRANSAÇÕES ]
+          </h3>
+
+          <div className="space-y-4 text-sm mt-4">
+            {stats.lastOrders.map((o) => (
+              <div key={o.id} className="border border-white/5 bg-black/50 p-3 hover:border-cyan-500/30 transition-colors">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-fuchsia-400 font-bold">#{o.id.slice(-6).toUpperCase()}</span>
+                  <span className="text-white font-bold">{money(o.total)}</span>
+                </div>
+                <p className="text-neutral-400 uppercase text-xs mb-2">
+                  {o.customer?.name} - {o.createdAt.toLocaleDateString('pt-BR')} {o.createdAt.toLocaleTimeString('pt-BR')}
+                </p>
+                <div className="text-neutral-500 text-xs">
+                  {o.items.map((it: any) => `${it.quantity}x ${it.name}`).join(', ')}
+                </div>
+              </div>
+            ))}
+            {stats.lastOrders.length === 0 && (
+              <p className="text-neutral-500 text-center py-8">{"< NENHUM_DADO_ENCONTRADO />"}</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

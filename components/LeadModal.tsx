@@ -52,7 +52,7 @@ export default function LeadModal({ open, onClose, onConfirm }: Props) {
             </h2>
 
             <p className="text-neutral-300 mb-4 text-sm">
-              Informe seu nome para identificação.  
+              Informe seu nome para identificação.
               O pagamento será feito via <strong>PIX</strong>.
             </p>
 
@@ -64,10 +64,10 @@ export default function LeadModal({ open, onClose, onConfirm }: Props) {
               onChange={(e) => handleNameChange(e.target.value)}
               className="
                 w-full mb-4
-                bg-black border border-white/20
+                bg-neutral-900 border border-neutral-800
                 rounded-lg px-4 py-3
                 text-white placeholder-neutral-400
-                focus:outline-none focus:border-green-500
+                focus:outline-none focus:border-fuchsia-500
               "
             />
 
@@ -87,7 +87,7 @@ export default function LeadModal({ open, onClose, onConfirm }: Props) {
                 onClick={handleConfirm}
                 className="
                   flex-1 py-3 rounded-lg
-                  bg-green-600 text-black
+                  bg-fuchsia-600 text-black
                   font-bold
                   hover:brightness-110
                 "

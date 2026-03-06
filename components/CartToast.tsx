@@ -20,19 +20,20 @@ export default function CartToast() {
     <AnimatePresence>
       {show && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          className="
-            fixed z-[9999]
-            bottom-24 right-4
-            bg-green-600 text-black
-            px-4 py-3
-            rounded-lg
-            font-bold shadow-xl
-          "
+          initial={{ opacity: 0, x: 50, scale: 0.9 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          exit={{ opacity: 0, x: 50, scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          className={`
+            fixed bottom-24 right-6 z-[60] px-6 py-4 shadow-[0_0_20px_rgba(217,70,239,0.3)]
+            bg-neutral-900 border-l-4 border-fuchsia-500 text-fuchsia-400
+            flex items-center gap-4 transition-all
+            font-mono text-sm uppercase tracking-widest cyber-clip
+            backdrop-blur-md
+          `}
         >
-          Produto adicionado ao orçamento
+          <span className="animate-pulse">⚡</span>
+          <span>[ Item Injetado no Inventário ]</span>
         </motion.div>
       )}
     </AnimatePresence>

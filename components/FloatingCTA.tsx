@@ -46,12 +46,12 @@ export default function FloatingCTA() {
 
   function handleSubmit(data: ConsultoriaData) {
     const message =
-      `Olá, meu nome é ${data.name}.\n` +
+      `LOG: Consultoria Requisitada.\n` +
+      `Nome: ${data.name}\n` +
       `Telefone: ${data.phone}\n` +
-      `Objetivo: ${data.goal}\n\n` +
-      `Gostaria de uma consultoria antes de fazer meu pedido.`;
+      `Parâmetro/Objetivo: ${data.goal}\n\n` +
+      `Aguardo análise de protocolo.`;
 
-    // ✅ AGORA VAI PARA O NÚMERO CERTO
     openWhatsApp(message);
     setOpen(false);
   }
@@ -59,56 +59,43 @@ export default function FloatingCTA() {
   return (
     <>
       {/* BOTÃO FLUTUANTE */}
-      <motion.button
-        onClick={() => setOpen(true)}
-        className="
-          hidden md:flex
-          fixed bottom-24 right-6 z-50
-          bg-yellow-400 text-black
-          px-5 py-3 rounded-full
-          font-extrabold
-          shadow-[0_0_25px_rgba(250,204,21,0.6)]
-          items-center gap-2
-        "
-        animate={{
-          scale: [1, 1.12, 1],
-          boxShadow: [
-            "0 0 15px rgba(250,204,21,0.4)",
-            "0 0 30px rgba(250,204,21,0.9)",
-            "0 0 15px rgba(250,204,21,0.4)",
-          ],
-        }}
-        transition={{ duration: 1.4, repeat: Infinity }}
-      >
-        💬 Consultoria
-      </motion.button>
+      <div className="hidden md:block fixed bottom-24 right-[104px] z-50">
+        <motion.button
+          onClick={() => setOpen(true)}
+          className="
+            relative
+            bg-neutral-900 border-2 border-fuchsia-500
+            text-fuchsia-400
+            px-6 py-3 cyber-clip
+            font-mono font-bold uppercase tracking-widest text-sm
+            flex items-center gap-3
+            hover:bg-fuchsia-500 hover:text-black transition-colors duration-300
+            group
+          "
+          animate={{
+            scale: [1, 1.05, 1],
+            boxShadow: [
+              "0 0 10px rgba(217,70,239,0.3)",
+              "0 0 35px rgba(217,70,239,1)",
+              "0 0 10px rgba(217,70,239,0.3)",
+            ],
+          }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          {/* Efeito Visual de Ping / Radar nas bordas para chamar muita atenção */}
+          <span className="absolute inset-0 border-2 border-fuchsia-500 cyber-clip animate-ping opacity-75"></span>
+
+          <span className="w-2 h-2 bg-fuchsia-400 rounded-full animate-pulse group-hover:bg-black"></span>
+          [ Iniciar Protocolo ]
+        </motion.button>
+      </div>
 
       {/* MODAL */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            className="fixed inset-0 z-[9999] bg-black/60 flex items-center justify-center px-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md"
-            >
-              <LeadModalConsultoria
-                open={open}
-                onClose={() => setOpen(false)}
-                onSubmit={handleSubmit}
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <LeadModalConsultoria
+        open={open}
+        onClose={() => setOpen(false)}
+        onSubmit={handleSubmit}
+      />
     </>
   );
 }
