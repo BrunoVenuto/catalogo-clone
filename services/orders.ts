@@ -1,5 +1,4 @@
-import { collection, doc, addDoc, getDocs, deleteDoc, updateDoc, query, orderBy, Timestamp, where } from "firebase/firestore";
-import { db } from "@/config/firebase";
+import { supabase } from "@/config/supabase";
 
 const DB_COLLECTION = "orders";
 
@@ -28,11 +27,14 @@ export interface Order {
 // Add a new order
 export async function addOrder(orderData: Omit<Order, "id" | "createdAt">): Promise<string> {
     try {
-        const docRef = await addDoc(collection(db, DB_COLLECTION), {
-            ...orderData,
-            createdAt: Timestamp.now(),
-        });
-        return docRef.id;
+        const { data, error } = await supabase
+            .from(DB_COLLECTION)
+            .insert(orderData) // Supabase will auto-generate created_at if configured in DB, but we pass nothing to let it handle or we can pass new Date()
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data.id as string;
     } catch (error) {
         console.error("Error adding order: ", error);
         throw error;
@@ -42,12 +44,17 @@ export async function addOrder(orderData: Omit<Order, "id" | "createdAt">): Prom
 // Get basic stats for dashboard
 export async function getDashboardStats() {
     try {
-        const q = query(collection(db, DB_COLLECTION), orderBy("createdAt", "desc"));
-        const snapshot = await getDocs(q);
-        const orders = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-            createdAt: doc.data().createdAt?.toDate() || new Date(),
+        const { data, error } = await supabase
+            .from(DB_COLLECTION)
+            .select("*")
+            .order("createdAt", { ascending: false });
+
+        if (error) throw error;
+
+        // Parse Supabase dates which come as ISO strings
+        const orders = (data || []).map(doc => ({
+            ...doc,
+            createdAt: new Date(doc.createdAt || doc.created_at)
         })) as Order[];
 
         let totalRevenue = 0;

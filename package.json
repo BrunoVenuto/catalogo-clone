@@ -10,8 +10,7 @@
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
-    "@supabase/supabase-js": "^2.49.1",
-    "firebase": "^12.10.0",
+    "@supabase/supabase-js": "^2.98.0",
     "framer-motion": "^12.24.12",
     "next": "16.1.1",
     "react": "19.2.3",

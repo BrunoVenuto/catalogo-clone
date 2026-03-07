@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from "firebase/auth";
-import { auth } from "@/config/firebase";
+import { supabase } from "@/config/supabase";
+import { Session } from "@supabase/supabase-js";
 import Link from "next/link";
 import { getProducts } from "@/services/products";
 import { getDashboardStats } from "@/services/orders";
@@ -12,7 +12,7 @@ function money(v: number) {
 }
 
 export default function AdminPage() {
-  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   const [email, setEmail] = useState("");
@@ -29,35 +29,62 @@ export default function AdminPage() {
   });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        // Load basic stats
-        const prods = await getProducts();
-        setProductsCount(prods.length);
-
-        const orderStats = await getDashboardStats();
-        setStats(orderStats);
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      setSession(currentSession);
+      if (currentSession) {
+        loadDashboardStats();
+      } else {
+        setLoading(false);
       }
-      setLoading(false);
     });
-    return () => unsubscribe();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, currentSession) => {
+        setSession(currentSession);
+        if (currentSession) {
+          loadDashboardStats();
+        } else {
+          setLoading(false);
+        }
+      }
+    );
+
+    return () => subscription.unsubscribe();
   }, []);
+
+  async function loadDashboardStats() {
+    setLoading(true);
+    try {
+      const prods = await getProducts();
+      setProductsCount(prods.length);
+
+      const orderStats = await getDashboardStats();
+      setStats(orderStats);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError("");
     setLoading(true);
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (err: any) {
-      setAuthError("Credential rejection: " + err.message);
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      setAuthError("Credential rejection: " + error.message);
       setLoading(false);
     }
   };
 
   const handleLogout = async () => {
-    await signOut(auth);
+    await supabase.auth.signOut();
   };
 
   if (loading) {
@@ -70,7 +97,7 @@ export default function AdminPage() {
   }
 
   // --- LOGIN SCREEN ---
-  if (!user) {
+  if (!session) {
     return (
       <div className="max-w-md mx-auto mt-20 p-8 bg-black/80 backdrop-blur-md border border-fuchsia-500/30 cyber-clip relative shadow-[0_0_30px_rgba(217,70,239,0.1)]">
         {/* Borders */}
@@ -131,7 +158,7 @@ export default function AdminPage() {
       <div className="flex items-center justify-between border-l-4 border-cyan-500 pl-4 py-2 bg-gradient-to-r from-cyan-900/20 to-transparent">
         <div>
           <h2 className="text-2xl font-bold text-white uppercase tracking-wider">Status do Sistema</h2>
-          <p className="text-sm text-cyan-400 mt-1">Bem-vindo(a), {user.email}</p>
+          <p className="text-sm text-cyan-400 mt-1">Bem-vindo(a), {session?.user?.email}</p>
         </div>
         <button onClick={handleLogout} className="text-xs text-neutral-400 hover:text-fuchsia-400 uppercase tracking-widest transition-colors border-b border-transparent hover:border-fuchsia-400">
           [X] Encerrar_Sessão

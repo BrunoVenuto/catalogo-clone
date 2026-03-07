@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/config/firebase";
+import { supabase } from "@/config/supabase";
 import { useRouter } from "next/navigation";
 import { getProducts, addProduct, updateProduct, deleteProduct, uploadImage } from "@/services/products";
 import type { Product } from "@/config/products";
@@ -39,15 +38,25 @@ export default function AdminProdutosPage() {
 
   // AUTH CHECK
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      if (!user) {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
         router.push("/admin");
       } else {
         setLoadingAuth(false);
         refresh();
       }
     });
-    return () => unsub();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        router.push("/admin");
+      } else {
+        setLoadingAuth(false);
+        refresh();
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, [router]);
 
   async function refresh() {
@@ -114,7 +123,11 @@ export default function AdminProdutosPage() {
 
       // Se houver um novo arquivo de imagem para upload
       if (imageFile) {
-        imageUrl = await uploadImage(imageFile);
+        try {
+          imageUrl = await uploadImage(imageFile);
+        } catch (uploadErr: any) {
+          throw new Error("Bloqueio no Storage (Upload da Foto): " + uploadErr.message);
+        }
       } else if (!imageUrl) {
         // Fallback icon placeholder if no image provided
         imageUrl = `https://placehold.co/400x400/0a0a0a/22d3ee/png?text=${draft.name.substring(0, 10).replace(/ /g, "+")}`;
@@ -128,10 +141,14 @@ export default function AdminProdutosPage() {
         image: imageUrl,
       };
 
-      if (editingId != null) {
-        await updateProduct(String(editingId), payload);
-      } else {
-        await addProduct(payload);
+      try {
+        if (editingId != null) {
+          await updateProduct(String(editingId), payload);
+        } else {
+          await addProduct(payload);
+        }
+      } catch (dbErr: any) {
+        throw new Error("Bloqueio no Firestore (Banco de Dados): " + dbErr.message);
       }
 
       await refresh();

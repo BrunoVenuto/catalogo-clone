@@ -45,8 +45,8 @@ export default function HeroSlider() {
             </div>
 
             <h1 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-neutral-200 to-neutral-500 leading-tight uppercase tracking-tighter mb-4">
-              <span className="block text-fuchsia-400 cyber-glow-text">Resultados</span>
-              <span className="block">Extremos</span>
+              <span className="block text-cyan-400 cyber-glow-text">Evolução</span>
+              <span className="block">Extrema</span>
             </h1>
 
             <p className="text-neutral-400 text-lg md:text-xl font-mono max-w-md mb-8 border-l-4 border-cyan-500 pl-4 py-1 bg-white/5 backdrop-blur-sm">
