@@ -8,6 +8,7 @@ import LeadModalConsultoria from "./LeadModalConsultoria";
 import { Product } from "@/config/products";
 import { siteConfig } from "@/config/site";
 import { useRouter } from "next/navigation";
+import { ShoppingCart, X, Trash2, Send, MessageCircle } from "lucide-react";
 
 type ConsultoriaData = {
   name: string;
@@ -53,7 +54,7 @@ export default function CartDrawer() {
 
   function openWhatsApp(to: string, message: string) {
     if (!to || to.length < 10) {
-      alert("Número do WhatsApp inválido no config/site.ts (use somente dígitos).");
+      alert("Número do WhatsApp inválido. Verifique suas configurações.");
       return;
     }
 
@@ -94,7 +95,6 @@ export default function CartDrawer() {
       }
 
       const orderItems = Array.from(agg.values());
-
       const { addOrder } = await import('@/services/orders');
 
       await addOrder({
@@ -111,12 +111,11 @@ export default function CartDrawer() {
       });
     } catch (err) {
       console.error("Falha ao registrar pedido no painel:", err);
-      alert("Não foi possível registrar o pedido no painel. Seu pedido no WhatsApp será enviado mesmo assim.");
     }
 
     const message =
-      `[ NOVO PEDIDO ]\n\n` +
-      `DADOS DO CLONE:\n` +
+      `*NOVO PEDIDO MEGA GYM*\n\n` +
+      `*Dados do Cliente:*\n` +
       `Nome: ${data.name}\n` +
       `CEP: ${data.cep}\n` +
       `Telefone (DDD): ${data.phone}\n` +
@@ -125,10 +124,10 @@ export default function CartDrawer() {
       `Número: ${data.number}\n` +
       `Bairro: ${data.neighborhood}\n` +
       `Cidade: ${data.city}\n` +
-      `Pto. de Referência: ${data.reference || "—"}\n\n` +
-      `CARGA DE PRODUTOS:\n${productsText}\n\n` +
-      `TOTAL: R$ ${total.toFixed(2)}\n\n` +
-      `Aguardando Chave PIX.`;
+      `Pto. de Referência: ${data.reference || "Nenhuma"}\n\n` +
+      `*Produtos Solicitados:*\n${productsText}\n\n` +
+      `*TOTAL:* R$ ${total.toFixed(2)}\n\n` +
+      `Aguardando confirmação e chave PIX.`;
 
     openWhatsApp(whatsappPedido, message);
 
@@ -137,17 +136,17 @@ export default function CartDrawer() {
     setOpen(false);
 
     setTimeout(() => {
-      router.push("/#products");
+      router.push("/#produtos");
     }, 300);
   }
 
   function handleConsultoriaSubmit(data: ConsultoriaData) {
     const message =
-      `LOG: Consultoria Requisitada.\n` +
+      `*Atendimento Mega Gym Solicitado*\n\n` +
       `Nome: ${data.name}\n` +
-      `Telefone: ${data.phone}\n` +
-      `Parâmetro/Objetivo: ${data.goal}\n\n` +
-      `Aguardo análise de protocolo.`;
+      `WhatsApp: ${data.phone}\n` +
+      `Objetivo: ${data.goal}\n\n` +
+      `Gostaria de falar com um de seus consultores sobre as opções de equipamentos.`;
 
     openWhatsApp(whatsappConsultoria, message);
     setConsultoriaOpen(false);
@@ -161,10 +160,10 @@ export default function CartDrawer() {
       <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-2">
         <button
           onClick={() => setOpen(true)}
-          className="bg-cyan-500/20 w-16 h-16 cyber-clip flex items-center justify-center border-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)] hover:scale-110 transition-transform relative group backdrop-blur-sm"
+          className="bg-mega-orange w-16 h-16 rounded-full flex items-center justify-center text-white shadow-xl hover:scale-105 transition-transform relative group"
         >
-          <span className="text-2xl filter drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]">🛒</span>
-          <span className="absolute -top-2 -right-2 bg-fuchsia-600 text-black font-black font-mono text-xs px-2 py-1 cyber-clip border border-fuchsia-400">
+          <ShoppingCart className="w-6 h-6" />
+          <span className="absolute -top-1 -right-1 bg-mega-dark text-white font-bold text-xs w-6 h-6 flex items-center justify-center rounded-full border-2 border-white shadow-sm">
             {items.length}
           </span>
         </button>
@@ -174,81 +173,89 @@ export default function CartDrawer() {
       <AnimatePresence>
         {open && (
           <motion.div
-            className="fixed inset-0 z-50 bg-black/60"
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-end"
             onClick={() => setOpen(false)}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="absolute right-0 top-0 h-full w-full max-w-md bg-neutral-950 p-6 text-white flex flex-col border-l-2 border-cyan-500/50 shadow-[-10px_0_30px_rgba(34,211,238,0.15)] cyber-clip-reverse"
+              className="h-full w-full max-w-md bg-white p-0 text-gray-900 flex flex-col shadow-[-10px_0_30px_rgba(0,0,0,0.1)] relative"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.3, type: "spring", stiffness: 200, damping: 25 }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Decorative Element */}
-              <div className="absolute top-0 right-0 w-1/2 h-1 bg-gradient-to-l from-fuchsia-500 to-transparent"></div>
-
-              <div className="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
-                <h2 className="text-2xl font-black uppercase text-cyan-400 tracking-wider">
-                  [ Inventário ]
+              {/* Header Drawer */}
+              <div className="flex justify-between items-center px-6 py-5 border-b border-gray-100 bg-gray-50">
+                <h2 className="text-lg font-black uppercase text-gray-900 flex items-center gap-3">
+                  <ShoppingCart className="w-5 h-5 text-mega-orange" />
+                  Seu Carrinho
                 </h2>
-                <button onClick={() => setOpen(false)} className="text-fuchsia-400 font-mono text-xl cyber-clip px-2 border border-fuchsia-500/30 hover:bg-fuchsia-500/20 transition-colors">
-                  X
+                <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-800 transition-colors p-2 rounded-full hover:bg-gray-200">
+                  <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <div className="flex-1 space-y-4 overflow-auto scrollbar-thin scrollbar-thumb-cyan-500 scrollbar-track-neutral-900 pr-2">
+              {/* Itens Drawer */}
+              <div className="flex-1 p-6 space-y-4 overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
                 {items.map((item, index) => (
                   <div
                     key={`${item.name}-${index}`}
-                    className="flex justify-between items-center border border-white/5 bg-white/5 p-3 cyber-clip group hover:border-cyan-500/30 transition-colors"
+                    className="flex justify-between items-center bg-gray-50 border border-gray-100 p-4 rounded-lg group hover:border-mega-orange transition-colors shadow-sm"
                   >
-                    <div className="flex-1">
-                      <p className="font-bold uppercase tracking-wide text-sm">{item.name}</p>
-                      <p className="text-yellow-400 font-mono text-xs mt-1">
+                    <div className="flex-1 pr-4">
+                      <p className="font-bold text-gray-800 text-sm mb-1 leading-tight">{item.name}</p>
+                      <p className="text-mega-orange font-bold text-sm">
                         R$ {Number(item.price).toFixed(2)}
                       </p>
                     </div>
                     <button
                       onClick={() => handleRemove(index)}
-                      className="text-fuchsia-500 font-mono text-lg hover:text-fuchsia-400 transition-colors px-2"
+                      className="text-gray-400 hover:text-red-500 transition-colors p-2"
+                      title="Remover item"
                     >
-                      ✕
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-8 border-t-[2px] border-cyan-500/30 pt-6 space-y-4 bg-neutral-950">
-                <div className="flex justify-between items-center text-xl font-black mb-6 border border-white/10 p-4 cyber-clip bg-white/5">
-                  <span className="uppercase tracking-widest text-neutral-400">Total:</span>
-                  <span className="text-yellow-500 font-mono text-2xl cyber-glow-text">R$ {total.toFixed(2)}</span>
+              {/* Footer Drawer */}
+              <div className="border-t border-gray-100 p-6 space-y-4 bg-white shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+                <div className="flex justify-between items-end mb-4">
+                  <span className="text-gray-500 font-bold uppercase tracking-wider text-sm">Subtotal:</span>
+                  <div className="text-right">
+                    <span className="text-2xl font-black text-gray-900 block leading-none">R$ {total.toFixed(2)}</span>
+                    <span className="text-xs text-gray-400 font-medium">No PIX / Boleto</span>
+                  </div>
                 </div>
 
                 <button
                   onClick={() => setPedidoOpen(true)}
-                  className="w-full bg-cyan-400 py-4 font-black text-black uppercase tracking-widest hover:bg-cyan-300 hover:shadow-[0_0_15px_rgba(34,211,238,0.5)] transition-all cyber-clip relative group overflow-hidden"
+                  className="w-full bg-mega-orange py-4 rounded-md font-black text-white uppercase tracking-wide flex items-center justify-center gap-2 hover:bg-[#e65c00] transition-colors shadow-md"
                 >
-                  <div className="absolute inset-0 border-[3px] border-transparent group-hover:border-white/50 cyber-clip transition-colors"></div>
-                  Transmitir Pedido
+                  <Send className="w-5 h-5" />
+                  Finalizar Pedido
                 </button>
 
-                <button
-                  onClick={() => setConsultoriaOpen(true)}
-                  className="w-full border border-fuchsia-500 bg-fuchsia-600/10 py-3 font-black text-fuchsia-400 uppercase tracking-widest hover:bg-fuchsia-600 hover:text-black hover:shadow-[0_0_15px_rgba(217,70,239,0.5)] transition-all cyber-clip"
-                >
-                  Solicitar Protocolo
-                </button>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setConsultoriaOpen(true)}
+                    className="w-full border border-gray-300 bg-white py-3 rounded-md font-bold text-gray-700 text-xs uppercase flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    Suporte
+                  </button>
 
-                <button
-                  onClick={handleClear}
-                  className="w-full border border-neutral-700 py-3 text-neutral-400 font-mono text-sm tracking-widest hover:bg-red-900/30 hover:text-red-400 hover:border-red-500/50 transition-all cyber-clip uppercase"
-                >
-                  [ Ejetar Itens ]
-                </button>
+                  <button
+                    onClick={handleClear}
+                    className="w-full border border-red-200 bg-red-50 py-3 rounded-md text-red-600 font-bold text-xs uppercase hover:bg-red-100 hover:text-red-700 hover:border-red-300 transition-colors"
+                  >
+                    Limpar
+                  </button>
+                </div>
               </div>
             </motion.div>
           </motion.div>

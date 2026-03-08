@@ -3,29 +3,24 @@
 import { motion } from "framer-motion";
 
 const testimonials = [
-  { name: "Carlos_M [✓]", text: "Protocolo de suplementação ativado com sucesso. Ganhos de força em +25%. Recomendo a síntese." },
-  { name: "Mariana_S [✓]", text: "Taxa de entrega: T-Minus 24 horas. Material nível corporal superior. Sistema validado!" },
-  { name: "Ricardo_P [✓]", text: "Integração do pre-workout no meu hardware foi imediata. Sem lag, foco absoluto." },
-  { name: "Fernanda_L [✓]", text: "Matriz de recuperação excelente. Tempo de downtime muscular reduzido pela metade." },
-  { name: "André_T [✓]", text: "Suporte técnico rápido. Os produtos Nexus são de fato outro nível de modificação." },
-  { name: "Juliana_R [✓]", text: "Upgrade confirmado no meu sistema orgânico. Valeu cada crédito gasto." },
+  { name: "Carlos M.", text: "Equipamento chegou super rápido. Qualidade excepcional, montagem fácil. Recomendo muito a MegaGym!" },
+  { name: "Mariana S.", text: "O Mega Rack mudou minha rotina. Construção muito sólida e versátil para treinar em casa." },
+  { name: "Ricardo P.", text: "Atendimento top do início ao fim. As polias são muito suaves e os pesos bem calibrados." },
+  { name: "Fernanda L.", text: "Melhor investimento que fiz para minha academia residencial. Custo benefício imbatível." },
+  { name: "André T.", text: "Acabamento da pintura eletrostática é perfeito. Equipamento de academia profissional mesmo." },
+  { name: "Juliana R.", text: "Comprei a bicicleta de spinning e me surpreendi. Muito silenciosa e resistente." },
 ];
 
 function getInitials(name: string) {
-  // Remove possible tags like [✓]
-  const cleanName = name.replace(/\[.*?\]/g, '').trim();
-  const parts = cleanName.split("_");
+  const parts = name.split(" ");
   if (parts.length === 1) return parts[0][0];
   return parts[0][0] + parts[1][0];
 }
 
 export default function SocialProof() {
   return (
-    <section className="py-24 bg-neutral-950 text-white relative overflow-hidden">
-      {/* Background Decor */}
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-fuchsia-500/5 rounded-full blur-[120px] pointer-events-none"></div>
-
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+    <section className="py-20 bg-white text-gray-900 border-t border-gray-100 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -33,11 +28,13 @@ export default function SocialProof() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-black font-mono tracking-tighter uppercase mb-2">
-            <span className="text-fuchsia-500 block text-lg tracking-widest mb-1 text-center">{"<"} LOGS_DE_USUÁRIO {">"}</span>
+          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight mb-2 text-mega-orange">
             O QUE NOSSOS CLIENTES DIZEM
           </h2>
-          <div className="w-24 h-1 bg-fuchsia-500 mx-auto mt-6 shadow-[0_0_10px_rgba(217,70,239,0.8)]"></div>
+          <p className="text-gray-500 font-medium max-w-2xl mx-auto mt-4">
+            A satisfação de quem já treina com os melhores equipamentos do mercado.
+          </p>
+          <div className="w-24 h-1 bg-mega-orange mx-auto mt-6"></div>
         </motion.div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -48,55 +45,33 @@ export default function SocialProof() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ y: -5, scale: 1.02 }}
-              className="
-                bg-neutral-900 border border-fuchsia-500/20 
-                cyber-clip p-6 
-                hover:border-fuchsia-500/80 hover:shadow-[0_0_20px_rgba(217,70,239,0.15)] 
-                transition-all duration-300
-                group
-                flex flex-col h-full
-              "
+              whileHover={{ y: -5 }}
+              className="bg-gray-50 border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300 flex flex-col h-full relative"
             >
-              {/* Topo */}
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex items-center gap-4">
-                  {/* Avatar tech */}
-                  <div className="
-                    w-12 h-12 flex-shrink-0
-                    bg-neutral-950 border border-cyan-500/50 text-cyan-400 font-mono font-bold 
-                    flex items-center justify-center
-                    group-hover:bg-cyan-500 group-hover:text-black transition-colors
-                  ">
-                    {getInitials(t.name)}
-                  </div>
-
-                  <div>
-                    <p className="font-mono text-sm text-neutral-300 group-hover:text-fuchsia-400 transition-colors">
-                      {t.name}
-                    </p>
-
-                    {/* Status Fictício */}
-                    <div className="text-[10px] font-mono text-cyan-500 mt-1 flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-pulse"></span>
-                      STATUS: VERIFIED
-                    </div>
-                  </div>
-                </div>
-
-                {/* Aspas Tech */}
-                <div className="text-fuchsia-500/30 font-serif text-4xl leading-none font-bold">
-                  "
-                </div>
+              {/* Aspas decorativas */}
+              <div className="absolute top-4 right-6 text-gray-200 font-serif text-6xl leading-none">
+                "
               </div>
 
               {/* Texto */}
-              <p className="text-neutral-400 font-mono text-sm leading-relaxed mt-2 flex-grow">
-                {">"} {t.text}
+              <p className="text-gray-600 text-sm leading-relaxed mb-6 font-medium flex-grow relative z-10 italic">
+                {t.text}
               </p>
 
-              {/* Bottom Decor */}
-              <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-fuchsia-500/30 to-transparent mt-6"></div>
+              {/* Topo / Autor */}
+              <div className="flex items-center gap-4 border-t border-gray-200 pt-4">
+                <div className="w-12 h-12 flex-shrink-0 bg-mega-orange text-white font-bold rounded-full flex items-center justify-center text-lg">
+                  {getInitials(t.name)}
+                </div>
+                <div>
+                  <p className="font-black text-gray-800 uppercase">
+                    {t.name}
+                  </p>
+                  <div className="text-xs text-[#00D000] mt-0.5 flex items-center gap-1 font-bold">
+                    Compra Verificada
+                  </div>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>

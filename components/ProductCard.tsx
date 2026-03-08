@@ -9,51 +9,71 @@ type Props = {
 };
 
 export default function ProductCard({ product, onOpen, onAdd }: Props) {
+  // Simple installment calculation mock (e.g., 12x)
+  const installments = 12;
+  const installmentValue = (Number(product.price) / installments).toFixed(2);
+
+  // Fake original price for strikethrough effect
+  const originalPrice = (Number(product.price) * 1.2).toFixed(2);
+
   return (
-    <div className="group relative bg-neutral-900/40 backdrop-blur-md p-5 text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(217,70,239,0.3)] cyber-clip border border-white/5 hover:border-fuchsia-500/50">
+    <div className="group relative bg-white border border-gray-200 rounded-lg p-4 transition-all duration-300 hover:shadow-xl flex flex-col h-full">
 
-      {/* Decorative Cyberpunk Accents */}
-      <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-cyan-500/0 group-hover:border-cyan-500/100 transition-colors duration-500"></div>
-      <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-fuchsia-500/0 group-hover:border-fuchsia-500/100 transition-colors duration-500"></div>
+      {/* Tag (Mocked "FRETE GRÁTIS EM SP E DESCONTO") */}
+      <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
+        <span className="bg-[#00D000] text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded-sm">
+          Frete Grátis em SP e Expresso
+        </span>
+        <span className="bg-yellow-400 text-black text-[10px] font-bold uppercase px-2 py-0.5 rounded-sm w-fit">
+          10% OFF
+        </span>
+      </div>
 
-      <button onClick={onOpen} className="w-full text-left relative z-10 block">
+      <button onClick={onOpen} className="w-full text-left relative z-10 flex flex-col flex-grow">
         {/* Image Container */}
-        <div className="relative overflow-hidden cyber-clip bg-neutral-950 p-1 border border-white/5 group-hover:border-white/20 transition-colors">
+        <div className="relative overflow-hidden bg-white mb-4 rounded-md aspect-square flex items-center justify-center">
           {product.image ? (
             <img
               src={product.image}
               alt={product.name}
-              className="h-52 w-full object-cover cyber-clip filter grayscale-[30%] group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-105"
+              className="h-full w-full object-contain filter transition-all duration-500 transform group-hover:scale-105"
             />
           ) : (
-            <div className="h-52 w-full bg-neutral-800 cyber-clip flex items-center justify-center">
-              <span className="font-mono text-neutral-500">[ NO IMAGE ]</span>
+            <div className="h-full w-full bg-gray-100 flex items-center justify-center">
+              <span className="text-gray-400 text-sm font-bold">[ NO IMAGE ]</span>
             </div>
           )}
         </div>
 
-        <div className="mt-5 border-l-2 border-transparent group-hover:border-cyan-400 pl-3 transition-colors duration-300">
-          <h3 className="text-xl font-black uppercase tracking-wide text-white group-hover:text-cyan-400 transition-colors">
+        <div className="flex-grow">
+          <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">
+            {product.category || "Equipamento"}
+          </p>
+          <h3 className="text-sm md:text-base font-bold uppercase text-gray-800 leading-tight mb-2 line-clamp-2 hover:text-mega-orange transition-colors">
             {product.name}
           </h3>
-          <p className="mt-2 text-xs text-neutral-400 font-mono line-clamp-2">
-            {product.description}
-          </p>
         </div>
       </button>
 
-      <div className="mt-6 flex flex-col gap-4 relative z-10">
-        <span className="text-2xl font-black font-mono text-yellow-500 tracking-tighter">
-          R$ {Number(product.price).toFixed(2)}
-        </span>
+      <div className="mt-4 flex flex-col gap-1 relative z-10 border-t border-gray-100 pt-4">
+        <div className="text-xs text-gray-400 line-through">
+          R$ {originalPrice}
+        </div>
+        <div className="flex items-baseline gap-2">
+          <span className="text-2xl font-black text-mega-orange">
+            R$ {Number(product.price).toFixed(2)}
+          </span>
+          <span className="text-sm font-bold text-mega-orange">à vista</span>
+        </div>
+        <div className="text-xs text-gray-600 font-medium">
+          <span className="font-bold">{installments}x</span> de <span className="font-bold">R$ {installmentValue}</span> s/juros
+        </div>
 
         <button
           onClick={onAdd}
-          className="w-full relative bg-white/5 border border-white/10 px-4 py-3 text-sm font-black text-white uppercase tracking-widest cyber-clip-reverse transition-all duration-300 hover:bg-fuchsia-600 hover:text-black hover:border-fuchsia-400 hover:shadow-[0_0_15px_rgba(217,70,239,0.5)] overflow-hidden"
+          className="mt-4 w-full bg-mega-orange text-white py-2.5 rounded-md font-bold uppercase text-sm hover:bg-[#e65c00] transition-colors shadow-sm"
         >
-          {/* Button Scanline Effect */}
-          <div className="absolute top-0 left-[-100%] w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite]"></div>
-          Adicionar
+          Ver Opções
         </button>
       </div>
     </div>

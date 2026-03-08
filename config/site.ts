@@ -1,5 +1,5 @@
 export const siteConfig = {
-  name: "Projeto Giga",
+  name: "MegaGym Clone",
 
   // 📦 Número para RECEBER PEDIDOS (somente dígitos: 55 + DDD + número)
   whatsappPedido: "5531995453632", // <-- troque pelo SEU número real de pedidos
@@ -15,22 +15,23 @@ export const siteConfig = {
   whatsappMessage:
     "Olá! Eu vim do seu site e gostaria de fazer um pedido com os seguintes itens:",
   consultoriaMessage:
-    "Olá, preciso de uma consultoria antes de fazer meu pedido.",
+    "Olá, preciso de ajuda com montagem de academia ou equipamentos.",
 
   hero: {
-    title: "Performance Extrema",
+    title: "MEGA RACK",
     subtitle:
-      "Produtos de alta qualidade, atendimento especializado e entrega garantida.",
-    cta: "Ver produtos",
+      "Transforme agora o seu espaço de treino! + De 50 tipos de exercícios em um único equipamento.",
+    cta: "Conheça",
 
-    imageDesktop: "/images/hero-resting.png",
-    imageMobile: "/images/hero-resting.png",
+    imageDesktop: "/images/hero.jpg",
+    imageMobile: "/images/hero-mobile.jpg",
   },
 
   menu: [
-    { label: "Home", href: "#home" },
-    { label: "Coleções", href: "#collections" },
-    { label: "Produtos", href: "#products" },
-    { label: "Contato", href: "#contact" },
+    { label: "MEGA OFERTAS", href: "#ofertas" },
+    { label: "HOME GYM", href: "#home-gym" },
+    { label: "EQUIPAMENTOS", href: "#equipamentos" },
+    { label: "PESOS LIVRES", href: "#pesos-livres" },
+    { label: "CONTATO", href: "#contato" },
   ],
 };

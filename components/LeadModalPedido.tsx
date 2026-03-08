@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
+import { X, AlertCircle } from "lucide-react";
 
 export type PedidoLeadData = {
   name: string;
@@ -57,14 +58,14 @@ export default function LeadModalPedido({ open, onClose, onConfirm }: Props) {
       reference: reference.trim(),
     };
 
-    if (!data.name) return alert("Preencha o NOME.");
+    if (!data.name) return alert("Preencha o Nome Completo.");
     if (data.cep.length !== 8) return alert("CEP inválido (8 dígitos).");
     if (data.phone.length < 10) return alert("Telefone inválido (com DDD).");
     if (data.cpf.length !== 11) return alert("CPF inválido (11 dígitos).");
-    if (!data.street) return alert("Preencha a RUA.");
-    if (!data.number) return alert("Preencha o NÚMERO.");
-    if (!data.neighborhood) return alert("Preencha o BAIRRO.");
-    if (!data.city) return alert("Preencha a CIDADE.");
+    if (!data.street) return alert("Preencha a Rua.");
+    if (!data.number) return alert("Preencha o Número.");
+    if (!data.neighborhood) return alert("Preencha o Bairro.");
+    if (!data.city) return alert("Preencha a Cidade.");
 
     onConfirm(data);
 
@@ -83,22 +84,14 @@ export default function LeadModalPedido({ open, onClose, onConfirm }: Props) {
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4"
+          className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
         >
           <motion.div
-            className="
-              w-full sm:max-w-xl
-              bg-neutral-950 text-white
-              cyber-clip
-              border border-cyan-500/50 shadow-[0_0_30px_rgba(34,211,238,0.15)]
-              flex flex-col
-              max-h-[92vh] sm:max-h-[85vh]
-              relative
-            "
+            className="w-full sm:max-w-xl bg-white text-gray-900 rounded-t-xl sm:rounded-xl shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[85vh] relative overflow-hidden"
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 50, opacity: 0 }}
@@ -106,38 +99,37 @@ export default function LeadModalPedido({ open, onClose, onConfirm }: Props) {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="px-6 pt-6 pb-4 border-b border-cyan-500/30 flex justify-between items-start bg-neutral-900/50">
+            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
               <div>
-                <h2 className="text-xl font-black uppercase text-cyan-400 tracking-wider">
-                  [ Transmissão de Pedido ]
+                <h2 className="text-xl font-black uppercase text-gray-900 tracking-tight">
+                  Finalizar Pedido
                 </h2>
-                <p className="text-xs font-mono text-fuchsia-400 mt-2 uppercase tracking-wide">
-                  {">"} Verifique as coordenadas de entrega
+                <p className="text-sm text-gray-500 mt-1 font-medium">
+                  Preencha seus dados de entrega
                 </p>
               </div>
-              <button onClick={onClose} className="text-fuchsia-500 font-mono text-xl cyber-clip px-2 py-1 border border-fuchsia-500/30 hover:bg-fuchsia-500/20 transition-colors">
-                X
+              <button onClick={onClose} className="text-gray-400 hover:text-gray-900 transition-colors p-2 rounded-full hover:bg-gray-200">
+                <X size={20} />
               </button>
             </div>
 
             {/* Conteúdo com scroll */}
-            <div className="px-6 py-6 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-cyan-500 scrollbar-track-neutral-900">
-              <div className="space-y-5">
-
+            <div className="px-6 py-6 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+              <div className="space-y-4">
                 {/* Inputs padronizados */}
                 {[
-                  { label: "NOME IMPRESSO:", value: name, setter: setName, placeholder: "Identificação do usuário", formatter: onlyLettersSpaces },
-                  { label: "CÓDIGO POSTAL (CEP):", value: cep, setter: setCep, placeholder: "Somente dígitos numéricos", mode: "numeric" },
-                  { label: "CONEXÃO (TEL/DDD):", value: phone, setter: setPhone, placeholder: "Dígitos de contato", mode: "tel" },
-                  { label: "REGISTRO (CPF):", value: cpf, setter: setCpf, placeholder: "11 dígitos de registro", mode: "numeric" },
-                  { label: "ROTA (RUA):", value: street, setter: setStreet, placeholder: "Vetor de entrega" },
-                  { label: "NÓ (NÚMERO):", value: number, setter: setNumber, placeholder: "Ponto de ancoragem" },
-                  { label: "SETOR (BAIRRO):", value: neighborhood, setter: setNeighborhood, placeholder: "Zona de acesso" },
-                  { label: "PÓLO (CIDADE):", value: city, setter: setCity, placeholder: "Metrópole", formatter: onlyLettersSpacesHyphen },
-                  { label: "MARCADOR (REFERÊNCIA):", value: reference, setter: setReference, placeholder: "Pontos de reconhecimento local" },
+                  { label: "Nome Completo", value: name, setter: setName, placeholder: "Ex: João da Silva", formatter: onlyLettersSpaces },
+                  { label: "CEP", value: cep, setter: setCep, placeholder: "Apenas números", mode: "numeric" },
+                  { label: "Celular / WhatsApp (DDD + Número)", value: phone, setter: setPhone, placeholder: "Ex: 11999999999", mode: "tel" },
+                  { label: "CPF", value: cpf, setter: setCpf, placeholder: "Para emissão de NF", mode: "numeric" },
+                  { label: "Endereço (Rua/Avenida)", value: street, setter: setStreet, placeholder: "Sua rua de entrega" },
+                  { label: "Número", value: number, setter: setNumber, placeholder: "Ex: 123" },
+                  { label: "Bairro", value: neighborhood, setter: setNeighborhood, placeholder: "Seu bairro" },
+                  { label: "Cidade", value: city, setter: setCity, placeholder: "Sua cidade", formatter: onlyLettersSpacesHyphen },
+                  { label: "Complemento / Referência", value: reference, setter: setReference, placeholder: "Ex: Apto 42, Próximo ao mercado" },
                 ].map((field, idx) => (
                   <div key={idx} className="relative group">
-                    <label className="text-xs font-mono text-cyan-500 block mb-1 tracking-wider uppercase">
+                    <label className="text-xs font-bold text-gray-600 block mb-1 uppercase tracking-wide">
                       {field.label}
                     </label>
                     <input
@@ -145,10 +137,8 @@ export default function LeadModalPedido({ open, onClose, onConfirm }: Props) {
                       onChange={(e) => field.setter(field.formatter ? field.formatter(e.target.value) : e.target.value)}
                       inputMode={(field.mode as any) || "text"}
                       placeholder={field.placeholder}
-                      className="w-full bg-neutral-900 border border-white/10 cyber-clip-reverse px-4 py-3 text-white font-mono text-sm placeholder-neutral-600 focus:outline-none focus:border-cyan-400 focus:bg-white/5 transition-colors"
+                      className="w-full bg-white border border-gray-300 rounded-md px-4 py-3 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-shadow"
                     />
-                    {/* Hover indicator */}
-                    <div className="absolute left-0 bottom-0 w-1 h-full bg-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                   </div>
                 ))}
               </div>
@@ -156,33 +146,28 @@ export default function LeadModalPedido({ open, onClose, onConfirm }: Props) {
 
             {/* Footer */}
             <div
-              className="
-                px-6 pt-4 border-t border-cyan-500/30
-                bg-neutral-900/80 backdrop-blur-md
-                sticky bottom-0
-              "
+              className="px-6 py-4 border-t border-gray-100 bg-white sticky bottom-0"
               style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 16px)" }}
             >
               <div className="flex gap-4">
                 <button
                   onClick={onClose}
-                  className="flex-1 py-4 font-mono uppercase text-sm border border-neutral-600 text-neutral-400 hover:text-white hover:border-white/50 cyber-clip transition-colors"
+                  className="flex-1 py-3 font-bold uppercase text-sm border border-gray-300 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors"
                 >
-                  [ Abortar ]
+                  Cancelar
                 </button>
 
                 <button
                   onClick={handleConfirm}
-                  className="flex-1 py-4 font-black uppercase tracking-widest bg-cyan-400 text-black cyber-clip hover:bg-cyan-300 hover:shadow-[0_0_15px_rgba(34,211,238,0.5)] transition-all relative overflow-hidden group"
+                  className="flex-1 py-3 font-black uppercase tracking-wide bg-mega-orange text-white rounded-md hover:bg-[#e65c00] transition-colors shadow-md"
                 >
-                  <div className="absolute inset-0 border-[3px] border-transparent group-hover:border-white/50 cyber-clip transition-colors"></div>
-                  Transmitir
+                  Confirmar e Enviar
                 </button>
               </div>
 
-              <div className="flex items-center gap-2 mt-4 text-xs font-mono text-fuchsia-500/80 uppercase">
-                <span className="animate-pulse">⚠️</span>
-                <span>Anomalias nos dados atrasam a entrega corp.</span>
+              <div className="flex items-center gap-2 mt-4 text-xs font-medium text-gray-500 justify-center">
+                <AlertCircle size={14} className="text-mega-orange" />
+                <span>Os dados serão enviados de forma segura para finalização no WhatsApp.</span>
               </div>
             </div>
 

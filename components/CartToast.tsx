@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { CheckCircle2 } from "lucide-react";
 
 export default function CartToast() {
   const [show, setShow] = useState(false);
@@ -25,15 +26,15 @@ export default function CartToast() {
           exit={{ opacity: 0, x: 50, scale: 0.9 }}
           transition={{ type: "spring", stiffness: 300, damping: 25 }}
           className={`
-            fixed bottom-24 right-6 z-[60] px-6 py-4 shadow-[0_0_20px_rgba(217,70,239,0.3)]
-            bg-neutral-900 border-l-4 border-fuchsia-500 text-fuchsia-400
-            flex items-center gap-4 transition-all
-            font-mono text-sm uppercase tracking-widest cyber-clip
-            backdrop-blur-md
+            fixed bottom-24 right-6 z-[60] px-4 py-3 shadow-lg rounded-lg
+            bg-white border border-gray-100 text-gray-800
+            flex items-center gap-3 transition-all
           `}
         >
-          <span className="animate-pulse">⚡</span>
-          <span>[ Item Injetado no Inventário ]</span>
+          <CheckCircle2 className="text-[#00D000] w-6 h-6" />
+          <span className="font-bold text-sm tracking-wide">
+            Produto adicionado ao carrinho
+          </span>
         </motion.div>
       )}
     </AnimatePresence>
