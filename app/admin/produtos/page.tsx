@@ -162,82 +162,82 @@ export default function AdminProdutosPage() {
 
   if (loadingAuth) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 text-cyan-400 font-mono">
-        <span className="w-8 h-8 rounded-full border-4 border-cyan-500/30 border-t-cyan-400 animate-spin mb-4"></span>
-        [ VERIFICANDO CREDENCIAIS DE ACESSO... ]
+      <div className="flex flex-col items-center justify-center py-32 text-mega-orange font-bold">
+        <span className="w-8 h-8 rounded-full border-4 border-gray-200 border-t-mega-orange animate-spin mb-4"></span>
+        VERIFICANDO CREDENCIAIS...
       </div>
     );
   }
 
   return (
-    <div className="space-y-12 font-mono animate-in fade-in duration-500 pb-20">
+    <div className="space-y-8 animate-in fade-in duration-500 pb-20 mt-8">
       {/* HEADER PAGE */}
-      <div className="flex items-center justify-between border-l-4 border-fuchsia-500 pl-4 py-2 bg-gradient-to-r from-fuchsia-900/20 to-transparent">
+      <div className="flex items-center justify-between border-l-4 border-mega-orange pl-4 py-2 bg-gradient-to-r from-orange-50 to-transparent rounded-r-lg">
         <div>
-          <h2 className="text-2xl font-bold text-white uppercase tracking-wider">GERENCIAMENTO_DE_INVENTÁRIO</h2>
-          <p className="text-sm text-fuchsia-400 mt-1">[ Modificação de Registros Core ]</p>
+          <h2 className="text-2xl font-extrabold text-gray-900 uppercase tracking-tight">Catálogo de Produtos</h2>
+          <p className="text-sm text-gray-500 mt-1 font-medium">Gerencie os itens da loja</p>
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-8 mt-6">
 
         {/* FORMULÁRIO */}
-        <div className="lg:col-span-1 border border-white/10 bg-neutral-900/50 backdrop-blur-sm p-6 cyber-clip self-start sticky top-6">
-          <h3 className="text-xl font-bold text-cyan-400 mb-6 uppercase tracking-widest border-b border-white/10 pb-4 flex justify-between items-center">
-            {editingId ? "++ UPDATE_ITEM ++" : "++ CREATE_ITEM ++"}
+        <div className="lg:col-span-1 border border-gray-200 bg-white rounded-xl shadow-sm p-6 self-start sticky top-24">
+          <h3 className="text-lg font-black text-gray-900 mb-6 uppercase tracking-tight border-b border-gray-100 pb-4 flex justify-between items-center">
+            {editingId ? "Editar Produto" : "Novo Produto"}
             {editingId && (
-              <button onClick={startCreate} className="text-xs text-white bg-red-900/50 border border-red-500 px-2 py-1 hover:bg-red-500 cyber-clip">
-                CANCELAR
+              <button onClick={startCreate} className="text-xs text-red-600 bg-red-50 border border-red-200 px-3 py-1.5 rounded hover:bg-red-600 hover:text-white transition-colors font-bold uppercase">
+                Cancelar Edição
               </button>
             )}
           </h3>
 
-          <div className="space-y-4 text-sm mt-4">
+          <div className="space-y-5 text-sm mt-4">
             <div>
-              <label className="block text-neutral-400 uppercase tracking-widest mb-1 text-xs">Identificador_Nome</label>
+              <label className="block text-gray-700 font-bold uppercase tracking-wide mb-1.5 text-xs">Nome do Produto</label>
               <input
                 value={draft.name}
                 onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
-                className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-cyan-400 transition-colors"
-                placeholder="NOME DO PRODUTO"
+                className="w-full bg-gray-50 border border-gray-300 rounded-md p-3 text-gray-900 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all"
+                placeholder="Ex: Banco Regulável"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-neutral-400 uppercase tracking-widest mb-1 text-xs">Valor</label>
+                <label className="block text-gray-700 font-bold uppercase tracking-wide mb-1.5 text-xs">Preço (R$)</label>
                 <input
                   value={draft.price}
                   onChange={(e) => setDraft((d) => ({ ...d, price: e.target.value }))}
                   inputMode="decimal"
-                  className="w-full bg-black border border-white/10 p-3 text-yellow-400 font-bold focus:outline-none focus:border-yellow-400 transition-colors"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-md p-3 text-gray-900 font-bold focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all"
                   placeholder="0.00"
                 />
               </div>
               <div>
-                <label className="block text-neutral-400 uppercase tracking-widest mb-1 text-xs">Classe</label>
+                <label className="block text-gray-700 font-bold uppercase tracking-wide mb-1.5 text-xs">Categoria</label>
                 <input
                   value={draft.category}
                   onChange={(e) => setDraft((d) => ({ ...d, category: e.target.value }))}
-                  className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-cyan-400 transition-colors"
-                  placeholder="Suplementos"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-md p-3 text-gray-900 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all"
+                  placeholder="Equipamentos"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-neutral-400 uppercase tracking-widest mb-1 text-xs">Log_de_Descrição</label>
+              <label className="block text-gray-700 font-bold uppercase tracking-wide mb-1.5 text-xs">Descrição</label>
               <textarea
                 value={draft.description}
                 onChange={(e) => setDraft((d) => ({ ...d, description: e.target.value }))}
                 rows={4}
-                className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-cyan-400 transition-colors resize-none"
+                className="w-full bg-gray-50 border border-gray-300 rounded-md p-3 text-gray-900 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all resize-none"
                 placeholder="Detalhes técnicos do item..."
               />
             </div>
 
-            <div className="border border-white/10 p-4 bg-black/50">
-              <label className="block text-neutral-400 uppercase tracking-widest mb-2 text-xs">Upload_de_Imagem</label>
+            <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
+              <label className="block text-gray-700 font-bold uppercase tracking-wide mb-2 text-xs">Imagem do Produto</label>
               <input
                 type="file"
                 accept="image/*"
@@ -246,59 +246,59 @@ export default function AdminProdutosPage() {
                     setImageFile(e.target.files[0]);
                   }
                 }}
-                className="w-full text-xs text-neutral-400 file:mr-4 file:py-2 file:px-4 file:bg-cyan-900/30 file:text-cyan-400 file:border-0 file:font-mono hover:file:bg-cyan-800 transition-colors cursor-pointer"
+                className="w-full text-xs text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gray-200 file:text-gray-700 file:font-bold hover:file:bg-gray-300 transition-colors cursor-pointer"
               />
 
               <div className="mt-4 text-center">
-                <span className="text-xs text-neutral-500 uppercase">OU INSIRA UMA URL DIRETA</span>
+                <span className="text-xs text-gray-500 font-bold uppercase">Ou insira o Link da Imagem</span>
               </div>
 
               <input
                 value={draft.image}
                 onChange={(e) => setDraft((d) => ({ ...d, image: e.target.value }))}
-                className="mt-2 w-full bg-black border border-white/10 p-2 text-white focus:outline-none focus:border-cyan-400 text-xs"
-                placeholder="https://..."
+                className="mt-2 w-full bg-white border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:border-mega-orange text-xs"
+                placeholder="https://suaimagem.com/foto.jpg"
               />
 
               {/* PREVIEW */}
               {(imageFile || draft.image) && (
-                <div className="mt-4 border border-cyan-500/30 p-1 cyber-clip w-32 mx-auto">
+                <div className="mt-4 border border-gray-200 rounded p-1 bg-white w-32 mx-auto shadow-sm">
                   <img
                     src={imageFile ? URL.createObjectURL(imageFile) : draft.image}
                     alt="Preview"
-                    className="w-full aspect-square object-cover filter grayscale hover:grayscale-0 transition-all cyber-clip"
+                    className="w-full aspect-square object-contain rounded"
                   />
                 </div>
               )}
             </div>
 
             {error && (
-              <div className="bg-red-950/50 border border-red-500 p-3 mt-4 text-xs text-red-400 animate-pulse uppercase text-center font-bold">
-                [ERRO] {error}
+              <div className="bg-red-50 border border-red-200 p-3 mt-4 text-xs text-red-700 rounded-md uppercase text-center font-bold">
+                {error}
               </div>
             )}
 
             <button
               onClick={save}
               disabled={busy}
-              className="mt-6 w-full bg-cyan-600/20 border border-cyan-500 text-cyan-400 py-4 font-bold uppercase tracking-widest hover:bg-cyan-400 hover:text-black transition-all cyber-clip disabled:opacity-50"
+              className="mt-6 w-full bg-mega-orange text-white py-4 rounded-md font-black uppercase tracking-wide hover:bg-[#e65c00] transition-all shadow-md disabled:opacity-50"
             >
-              {busy ? "PROCESSANDO..." : editingId ? "[ CONFIRMAR UPDATE ]" : "[ INJETAR NOVO ITEM ]"}
+              {busy ? "Salvando..." : editingId ? "Atualizar Produto" : "Cadastrar Produto"}
             </button>
           </div>
         </div>
 
         {/* LISTA DE PRODUTOS */}
         <div className="lg:col-span-2">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-bold text-neutral-300 uppercase tracking-widest">
-              REGISTROS_ATIVOS ({products.length})
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+            <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight">
+              Todos os Produtos ({products.length})
             </h3>
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="BUSCAR [ NOME, CLASSE ]"
-              className="w-64 bg-black border border-white/20 p-2 text-white text-sm focus:outline-none focus:border-cyan-400 cyber-clip-reverse"
+              placeholder="Buscar por nome ou categoria..."
+              className="w-full sm:w-64 bg-white border border-gray-300 rounded-md p-2 text-gray-900 text-sm focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange shadow-sm"
             />
           </div>
 
@@ -306,44 +306,50 @@ export default function AdminProdutosPage() {
             {filtered.map((p) => (
               <div
                 key={p.id}
-                className="flex flex-col md:flex-row items-center justify-between border border-white/5 bg-neutral-900 overflow-hidden hover:border-cyan-500/30 transition-colors group p-4 gap-4"
+                className="flex flex-col md:flex-row items-center justify-between border border-gray-200 rounded-xl bg-white shadow-sm hover:shadow-md hover:border-mega-orange transition-all group p-4 gap-4"
               >
                 <div className="flex items-center gap-4 w-full md:w-auto">
-                  <div className="w-16 h-16 flex-shrink-0 border border-white/10 cyber-clip relative bg-black">
-                    {p.image && <img src={p.image} alt={p.name} className="absolute inset-0 w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition" />}
+                  <div className="w-16 h-16 flex-shrink-0 border border-gray-100 rounded bg-gray-50 flex items-center justify-center relative overflow-hidden">
+                    {p.image ? (
+                      <img src={p.image} alt={p.name} className="absolute inset-0 w-full h-full object-contain p-1" />
+                    ) : (
+                      <span className="text-gray-300 font-black text-2xl">M</span>
+                    )}
                   </div>
                   <div>
-                    <p className="font-bold text-white text-lg tracking-wider group-hover:text-cyan-400 transition-colors">
+                    <h4 className="font-black text-gray-900 text-base leading-tight group-hover:text-mega-orange transition-colors">
                       {p.name}
-                    </p>
-                    <div className="text-xs text-neutral-500 uppercase tracking-widest mt-1">
-                      <span className="text-yellow-400 mr-2 border-b border-yellow-400/30 font-bold">R$ {Number(p.price).toFixed(2)}</span>
-                      | CLASSE: {p.category}
+                    </h4>
+                    <div className="text-xs text-gray-500 uppercase font-bold mt-1.5">
+                      <span className="text-mega-orange mr-2">
+                        R$ {Number(p.price).toFixed(2)}
+                      </span>
+                      &bull; {p.category}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex w-full md:w-auto gap-2 text-xs font-bold uppercase tracking-wider">
+                <div className="flex w-full md:w-auto gap-2 text-xs font-bold uppercase tracking-wide">
                   <button
                     onClick={() => startEdit(p)}
-                    className="flex-1 md:flex-none border border-cyan-500/50 bg-cyan-900/20 text-cyan-400 px-4 py-2 hover:bg-cyan-500 hover:text-black transition-colors"
+                    className="flex-1 md:flex-none border border-gray-300 bg-white text-gray-700 rounded px-4 py-2 hover:bg-gray-100 hover:text-black transition-colors"
                   >
-                    EDIT
+                    Editar
                   </button>
                   <button
                     onClick={() => handleRemove(p.id)}
                     disabled={busy}
-                    className="flex-1 md:flex-none border border-red-500/50 bg-red-900/20 text-red-400 px-4 py-2 hover:bg-red-500 hover:text-white transition-colors"
+                    className="flex-1 md:flex-none border border-red-200 bg-red-50 text-red-600 rounded px-4 py-2 hover:bg-red-600 hover:text-white transition-colors"
                   >
-                    DEL
+                    Excluir
                   </button>
                 </div>
               </div>
             ))}
 
             {filtered.length === 0 && (
-              <div className="p-12 text-center text-neutral-500 border border-dashed border-white/10">
-                {"< NENHUM_REGISTRO_ENCONTRADO />"}
+              <div className="p-12 text-center text-gray-400 font-medium bg-gray-50 border border-dashed border-gray-200 rounded-xl">
+                Nenhum produto cadastrado ou encontrado na busca.
               </div>
             )}
           </div>

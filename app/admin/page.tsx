@@ -89,9 +89,9 @@ export default function AdminPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 text-cyan-400 font-mono">
-        <span className="w-8 h-8 rounded-full border-4 border-cyan-500/30 border-t-cyan-400 animate-spin mb-4"></span>
-        [ INICIANDO PROTOCOLO DE AUTENTICAÇÃO... ]
+      <div className="flex flex-col items-center justify-center py-32 text-mega-orange font-bold">
+        <span className="w-8 h-8 rounded-full border-4 border-gray-200 border-t-mega-orange animate-spin mb-4"></span>
+        CARREGANDO PAINEL...
       </div>
     );
   }
@@ -99,53 +99,49 @@ export default function AdminPage() {
   // --- LOGIN SCREEN ---
   if (!session) {
     return (
-      <div className="max-w-md mx-auto mt-20 p-8 bg-black/80 backdrop-blur-md border border-fuchsia-500/30 cyber-clip relative shadow-[0_0_30px_rgba(217,70,239,0.1)]">
-        {/* Borders */}
-        <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-fuchsia-500/50 m-2 pointer-events-none"></div>
-        <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-cyan-500/50 m-2 pointer-events-none"></div>
-
-        <h2 className="text-2xl font-black font-mono text-fuchsia-500 tracking-wider mb-6 text-center uppercase">
-          {"<"} IDENTITY_CHECK {">"}
+      <div className="max-w-md mx-auto mt-20 p-8 bg-white border border-gray-200 rounded-xl shadow-lg relative">
+        <h2 className="text-2xl font-black text-gray-900 tracking-tight mb-6 text-center uppercase">
+          Acesso Restrito
         </h2>
 
         {authError && (
-          <div className="bg-red-950/50 border border-red-500 p-3 mb-6 font-mono text-xs text-red-400 animate-pulse">
-            [ERRO_SISTÊMICO] {authError}
+          <div className="bg-red-50 border border-red-200 p-3 mb-6 text-sm text-red-700 rounded-md">
+            Erro: {authError}
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="flex flex-col gap-6 font-mono">
+        <form onSubmit={handleLogin} className="flex flex-col gap-5">
           <div>
-            <label className="block text-cyan-400 text-xs tracking-widest uppercase mb-2">
-              Credencial_Origem_Email
+            <label className="block text-gray-700 text-sm font-bold uppercase tracking-wide mb-1">
+              E-mail
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-neutral-900 border border-white/20 p-3 text-white focus:outline-none focus:border-cyan-400 transition-colors"
-              placeholder="admin@nexus.com"
+              className="w-full bg-gray-50 border border-gray-300 rounded-md p-3 text-gray-900 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all"
+              placeholder="admin@megagym.com"
               required
             />
           </div>
           <div>
-            <label className="block text-cyan-400 text-xs tracking-widest uppercase mb-2">
-              Chave_Padrão_Senha
+            <label className="block text-gray-700 text-sm font-bold uppercase tracking-wide mb-1">
+              Senha
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-neutral-900 border border-white/20 p-3 text-white focus:outline-none focus:border-cyan-400 transition-colors"
+              className="w-full bg-gray-50 border border-gray-300 rounded-md p-3 text-gray-900 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all"
               placeholder="••••••••"
               required
             />
           </div>
           <button
             type="submit"
-            className="mt-4 bg-fuchsia-600/20 border border-fuchsia-500 text-fuchsia-400 py-3 font-bold uppercase tracking-wider hover:bg-fuchsia-500 hover:text-black transition-all cyber-clip"
+            className="mt-2 w-full bg-mega-orange text-white py-3 rounded-md font-black uppercase tracking-wide hover:bg-[#e65c00] transition-colors shadow-md"
           >
-            [ FORNECER ACESSO ]
+            Entrar no Painel
           </button>
         </form>
       </div>
@@ -154,100 +150,97 @@ export default function AdminPage() {
 
   // --- DASHBOARD OVERVIEW ---
   return (
-    <div className="space-y-8 font-mono animate-in fade-in duration-500">
-      <div className="flex items-center justify-between border-l-4 border-cyan-500 pl-4 py-2 bg-gradient-to-r from-cyan-900/20 to-transparent">
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="flex items-center justify-between border-l-4 border-mega-orange pl-4 py-2 bg-gradient-to-r from-orange-50 to-transparent rounded-r-lg">
         <div>
-          <h2 className="text-2xl font-bold text-white uppercase tracking-wider">Status do Sistema</h2>
-          <p className="text-sm text-cyan-400 mt-1">Bem-vindo(a), {session?.user?.email}</p>
+          <h2 className="text-2xl font-extrabold text-gray-900 uppercase tracking-tight">Visão Geral</h2>
+          <p className="text-sm text-gray-500 mt-1 font-medium pb-1">Conectado como {session?.user?.email}</p>
         </div>
-        <button onClick={handleLogout} className="text-xs text-neutral-400 hover:text-fuchsia-400 uppercase tracking-widest transition-colors border-b border-transparent hover:border-fuchsia-400">
-          [X] Encerrar_Sessão
-        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
-        <div className="bg-neutral-900 border border-white/10 cyber-clip p-6 hover:border-cyan-500/50 transition-colors group">
-          <h3 className="text-sm text-neutral-400 uppercase tracking-widest mb-4 group-hover:text-cyan-400">
+        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md hover:border-mega-orange transition-all group">
+          <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4 group-hover:text-mega-orange transition-colors">
             Faturamento Hoje
           </h3>
-          <p className="text-3xl lg:text-4xl font-black text-white">{money(stats.todayRevenue)}</p>
+          <p className="text-3xl lg:text-4xl font-black text-gray-900">{money(stats.todayRevenue)}</p>
         </div>
 
-        <div className="bg-neutral-900 border border-white/10 cyber-clip p-6 hover:border-cyan-500/50 transition-colors group">
-          <h3 className="text-sm text-neutral-400 uppercase tracking-widest mb-4 group-hover:text-cyan-400">
+        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md hover:border-mega-orange transition-all group">
+          <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4 group-hover:text-mega-orange transition-colors">
             Faturamento Total
           </h3>
-          <p className="text-3xl lg:text-4xl font-black text-white">{money(stats.totalRevenue)}</p>
+          <p className="text-3xl lg:text-4xl font-black text-gray-900">{money(stats.totalRevenue)}</p>
         </div>
 
-        <div className="bg-neutral-900 border border-white/10 cyber-clip p-6 hover:border-cyan-500/50 transition-colors group">
-          <h3 className="text-sm text-neutral-400 uppercase tracking-widest mb-4 group-hover:text-cyan-400">
+        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md hover:border-mega-orange transition-all group">
+          <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4 group-hover:text-mega-orange transition-colors">
             Pedidos Gerados
           </h3>
-          <p className="text-3xl lg:text-4xl font-black text-white">{stats.totalOrders}</p>
+          <p className="text-3xl lg:text-4xl font-black text-gray-900">{stats.totalOrders}</p>
         </div>
 
-        <div className="bg-neutral-900 border border-white/10 cyber-clip p-6 hover:border-cyan-500/50 transition-colors group flex flex-col justify-between">
+        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md hover:border-mega-orange transition-all group flex flex-col justify-between">
           <div>
-            <h3 className="text-sm text-neutral-400 uppercase tracking-widest mb-4 group-hover:text-cyan-400">
-              Produtos Indexados
+            <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4 group-hover:text-mega-orange transition-colors">
+              Produtos Ativos
             </h3>
-            <p className="text-3xl lg:text-4xl font-black text-white">{productsCount}</p>
+            <p className="text-3xl lg:text-4xl font-black text-gray-900">{productsCount}</p>
           </div>
-          <Link href="/admin/produtos" className="mt-4 inline-block text-cyan-500 text-sm hover:underline uppercase tracking-wide">
-            Gerenciar {">"}
+          <Link href="/admin/produtos" className="mt-4 inline-block text-mega-orange text-sm font-bold hover:underline uppercase tracking-wide">
+            Gerenciar Catálogo &gt;
           </Link>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
         {/* TOP PRODUCTS */}
-        <div className="bg-neutral-900 border border-white/10 p-6 cyber-clip">
-          <h3 className="text-lg font-bold text-fuchsia-400 uppercase tracking-widest mb-6 border-b border-white/10 pb-4">
-            [ TOP 5 PRODUTOS VENDIDOS ]
+        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+          <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight mb-6 border-b border-gray-100 pb-4">
+            Top 5 Mais Vendidos
           </h3>
 
           <div className="space-y-4 text-sm mt-4">
             {stats.topProducts.map((p, index) => (
-              <div key={index} className="flex justify-between items-center border-b border-white/5 pb-2">
-                <span className="text-white truncate pr-4">
+              <div key={index} className="flex justify-between items-center border-b border-gray-50 pb-3">
+                <span className="text-gray-800 font-bold truncate pr-4">
                   {index + 1}. {p.name}
                 </span>
                 <div className="flex flex-col items-end text-right whitespace-nowrap">
-                  <span className="text-cyan-400 font-bold">{p.quantity} un.</span>
-                  <span className="text-neutral-500 uppercase text-xs">Fat: {money(p.revenue)}</span>
+                  <span className="text-mega-orange font-black text-base">{p.quantity} un.</span>
+                  <span className="text-gray-500 uppercase text-xs font-bold">Fat: {money(p.revenue)}</span>
                 </div>
               </div>
             ))}
             {stats.topProducts.length === 0 && (
-              <p className="text-neutral-500 text-center py-8">{"< NENHUM_DADO_ENCONTRADO />"}</p>
+              <p className="text-gray-400 text-center py-8 font-medium">Nenhum dado encontrado para o período.</p>
             )}
           </div>
         </div>
 
         {/* LATEST ORDERS */}
-        <div className="bg-neutral-900 border border-white/10 p-6 cyber-clip">
-          <h3 className="text-lg font-bold text-cyan-400 uppercase tracking-widest mb-6 border-b border-white/10 pb-4">
-            [ ÚLTIMAS TRANSAÇÕES ]
+        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+          <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight mb-6 border-b border-gray-100 pb-4">
+            Últimas Vendas
           </h3>
 
           <div className="space-y-4 text-sm mt-4">
             {stats.lastOrders.map((o) => (
-              <div key={o.id} className="border border-white/5 bg-black/50 p-3 hover:border-cyan-500/30 transition-colors">
+              <div key={o.id} className="border border-gray-200 rounded-lg bg-gray-50 p-4 hover:border-mega-orange transition-colors">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-fuchsia-400 font-bold">#{o.id.slice(-6).toUpperCase()}</span>
-                  <span className="text-white font-bold">{money(o.total)}</span>
+                  <span className="text-mega-orange font-black">Pedido #{o.id.slice(-6).toUpperCase()}</span>
+                  <span className="text-gray-900 font-black text-base">{money(o.total)}</span>
                 </div>
-                <p className="text-neutral-400 uppercase text-xs mb-2">
-                  {o.customer?.name} - {o.createdAt.toLocaleDateString('pt-BR')} {o.createdAt.toLocaleTimeString('pt-BR')}
+                <p className="text-gray-600 text-xs font-bold mb-2">
+                  {o.customer?.name} &bull; {o.createdAt.toLocaleDateString('pt-BR')} {o.createdAt.toLocaleTimeString('pt-BR')}
                 </p>
-                <div className="text-neutral-500 text-xs">
+                <div className="text-gray-500 text-xs font-medium bg-white p-2 rounded border border-gray-100">
                   {o.items.map((it: any) => `${it.quantity}x ${it.name}`).join(', ')}
                 </div>
               </div>
             ))}
             {stats.lastOrders.length === 0 && (
-              <p className="text-neutral-500 text-center py-8">{"< NENHUM_DADO_ENCONTRADO />"}</p>
+              <p className="text-gray-400 text-center py-8 font-medium">Nenhuma transação recente encontrada.</p>
             )}
           </div>
         </div>

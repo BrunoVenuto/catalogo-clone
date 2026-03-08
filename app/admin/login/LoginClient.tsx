@@ -35,37 +35,38 @@ export default function LoginClient() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-      <div className="w-full max-w-md rounded-2xl border border-neutral-800 bg-neutral-950 p-6">
-        <h1 className="text-2xl font-bold">Admin Login</h1>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6 font-sans">
+      <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-xl">
+        <h1 className="text-3xl font-black text-center text-gray-900 mb-2 uppercase tracking-tight">Login Admin</h1>
+        <p className="text-center text-gray-500 text-sm mb-6">Acesse o painel MegaGym</p>
 
         {errorMsg ? (
-          <div className="mt-4 rounded-xl border border-red-800 bg-red-950/40 p-3 text-sm text-red-200">
+          <div className="mb-6 rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">
             {errorMsg}
           </div>
         ) : null}
 
-        <form onSubmit={onSubmit} className="mt-6 space-y-4">
+        <form onSubmit={onSubmit} className="space-y-5">
           <div>
-            <label className="text-sm text-neutral-300">Email</label>
+            <label className="block text-sm font-bold text-gray-700 mb-1 uppercase tracking-wide">E-mail</label>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
               autoComplete="email"
-              className="mt-2 w-full rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3 text-white outline-none focus:border-yellow-400"
+              className="w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all"
               required
             />
           </div>
 
           <div>
-            <label className="text-sm text-neutral-300">Senha</label>
+            <label className="block text-sm font-bold text-gray-700 mb-1 uppercase tracking-wide">Senha</label>
             <input
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               type="password"
               autoComplete="current-password"
-              className="mt-2 w-full rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3 text-white outline-none focus:border-yellow-400"
+              className="w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all"
               required
             />
           </div>
@@ -73,7 +74,7 @@ export default function LoginClient() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-white px-4 py-3 text-sm font-semibold text-black disabled:opacity-60"
+            className="w-full rounded-md bg-mega-orange px-4 py-3 text-base font-black uppercase tracking-wide text-white hover:bg-[#e65c00] transition-colors disabled:opacity-60 shadow-md mt-4"
           >
             {loading ? "Entrando..." : "Entrar"}
           </button>
