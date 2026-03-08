@@ -23,7 +23,7 @@ export const siteConfig = {
       "Transforme agora o seu espaço de treino! + De 50 tipos de exercícios em um único equipamento.",
     cta: "Conheça",
 
-    imageDesktop: "/images/hero.jpg",
+    imageDesktop: "/images/hero.png",
     imageMobile: "/images/hero-mobile.jpg",
   },
 
