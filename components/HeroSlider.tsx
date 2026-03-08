@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export default function HeroSlider() {
   function scrollToProducts() {
-    const el = document.getElementById("ofertas");
+    const el = document.getElementById("produtos");
     if (!el) return;
 
     const headerOffset = 100;
@@ -20,7 +20,7 @@ export default function HeroSlider() {
   }
 
   return (
-    <section className="relative w-full bg-mega-gray overflow-hidden">
+    <section id="home" className="relative w-full bg-mega-gray overflow-hidden">
       {/* Container Background Split (Desktop) */}
       <div className="absolute inset-0 flex">
         <div className="w-full md:w-1/2 bg-white"></div>

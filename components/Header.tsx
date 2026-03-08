@@ -38,13 +38,25 @@ export default function Header() {
           {/* MENU DESKTOP */}
           <nav className="hidden lg:flex items-center gap-6 text-sm font-bold uppercase text-white tracking-wide">
             {siteConfig.menu.map((item, idx) => (
-              <Link
+              <a
                 key={idx}
                 href={item.href}
+                onClick={(e) => {
+                  if (item.href.startsWith("#")) {
+                    e.preventDefault();
+                    const el = document.querySelector(item.href);
+                    if (el) {
+                      const headerOffset = 100;
+                      const elementPosition = el.getBoundingClientRect().top;
+                      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    }
+                  }
+                }}
                 className="hover:text-mega-orange transition-colors"
               >
                 {item.label}
-              </Link>
+              </a>
             ))}
           </nav>
 
@@ -136,14 +148,26 @@ export default function Header() {
               {/* NAV MOBILE */}
               <nav className="flex flex-col gap-4 text-lg font-bold uppercase text-white tracking-wide flex-1 overflow-y-auto">
                 {siteConfig.menu.map((item, idx) => (
-                  <Link
+                  <a
                     key={idx}
                     href={item.href}
-                    onClick={() => setOpen(false)}
+                    onClick={(e) => {
+                      if (item.href.startsWith("#")) {
+                        e.preventDefault();
+                        const el = document.querySelector(item.href);
+                        if (el) {
+                          const headerOffset = 100;
+                          const elementPosition = el.getBoundingClientRect().top;
+                          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                        }
+                      }
+                      setOpen(false);
+                    }}
                     className="hover:text-mega-orange transition-colors py-2 border-b border-white/5"
                   >
                     {item.label}
-                  </Link>
+                  </a>
                 ))}
 
                 {/* CTA MOBILE */}

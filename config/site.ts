@@ -28,10 +28,9 @@ export const siteConfig = {
   },
 
   menu: [
-    { label: "MEGA OFERTAS", href: "#ofertas" },
-    { label: "HOME GYM", href: "#home-gym" },
-    { label: "EQUIPAMENTOS", href: "#equipamentos" },
-    { label: "PESOS LIVRES", href: "#pesos-livres" },
-    { label: "CONTATO", href: "#contato" },
+    { label: "Home", href: "#home" },
+    { label: "Coleções", href: "#produtos" },
+    { label: "Produtos", href: "#produtos" },
+    { label: "Contato", href: "#contato" },
   ],
 };
