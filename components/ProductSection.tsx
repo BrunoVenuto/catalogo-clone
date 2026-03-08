@@ -81,8 +81,7 @@ export default function ProductSection() {
     loadData();
   }, []);
 
-  const categories: string[] = ["MAIS VENDIDOS", "MEGA SALDÃO", "LANÇAMENTOS"];
-  const [activeCategory, setActiveCategory] = useState<string>("MAIS VENDIDOS");
+
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   // Filter mocked or db products based on selected tab (simplistic mapping)
@@ -91,22 +90,6 @@ export default function ProductSection() {
   return (
     <section id="produtos" className="py-16 bg-mega-gray relative w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-
-        {/* CATEGORY TABS */}
-        <div className="flex flex-wrap justify-center gap-4 sm:gap-8 border-b-2 border-gray-200 mb-10 overflow-x-auto whitespace-nowrap pb-1">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`text-lg sm:text-2xl font-black uppercase tracking-tighter pb-3 transition-colors px-2 border-b-4 ${activeCategory === cat
-                  ? "text-black border-black"
-                  : "text-gray-400 border-transparent hover:text-gray-600"
-                }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 text-mega-orange font-bold">
