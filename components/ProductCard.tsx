@@ -19,15 +19,6 @@ export default function ProductCard({ product, onOpen, onAdd }: Props) {
   return (
     <div className="group relative bg-white border border-gray-200 rounded-lg p-4 transition-all duration-300 hover:shadow-xl flex flex-col h-full">
 
-      {/* Tag (Mocked "FRETE GRÁTIS EM SP E DESCONTO") */}
-      <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
-        <span className="bg-[#00D000] text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded-sm">
-          Frete Grátis em SP e Expresso
-        </span>
-        <span className="bg-yellow-400 text-black text-[10px] font-bold uppercase px-2 py-0.5 rounded-sm w-fit">
-          10% OFF
-        </span>
-      </div>
 
       <button onClick={onOpen} className="w-full text-left relative z-10 flex flex-col flex-grow">
         {/* Image Container */}
@@ -66,14 +57,14 @@ export default function ProductCard({ product, onOpen, onAdd }: Props) {
           <span className="text-sm font-bold text-mega-orange">à vista</span>
         </div>
         <div className="text-xs text-gray-600 font-medium">
-          <span className="font-bold">{installments}x</span> de <span className="font-bold">R$ {installmentValue}</span> s/juros
+
         </div>
 
         <button
           onClick={onAdd}
           className="mt-4 w-full bg-mega-orange text-white py-2.5 rounded-md font-bold uppercase text-sm hover:bg-[#e65c00] transition-colors shadow-sm"
         >
-          Ver Opções
+          Comprar Agora
         </button>
       </div>
     </div>
