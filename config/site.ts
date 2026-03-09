@@ -15,12 +15,12 @@ export const siteConfig = {
   whatsappMessage:
     "Olá! Eu vim do seu site e gostaria de fazer um pedido com os seguintes itens:",
   consultoriaMessage:
-    "Olá, preciso de ajuda com montagem de academia ou equipamentos.",
+    "Olá, preciso de ajuda com meu projeto..",
 
   hero: {
-    title: "MEGA RACK",
+    title: "PROJETO GIGA",
     subtitle:
-      "Transforme agora o seu espaço de treino! + De 50 tipos de exercícios em um único equipamento.",
+      "Resultados extremos para quem treina de verdade",
     cta: "Conheça",
 
     imageDesktop: "/images/hero.png",

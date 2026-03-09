@@ -51,7 +51,7 @@ export default function FloatingCTA() {
       `Nome: ${data.name}\n` +
       `WhatsApp: ${data.phone}\n` +
       `Objetivo: ${data.goal}\n\n` +
-      `Gostaria de falar com um de seus consultores sobre as opções de equipamentos.`;
+      `Gostaria de falar com um de seus consultores sobre as opções de ciclos.`;
 
     openWhatsApp(message);
     setOpen(false);
