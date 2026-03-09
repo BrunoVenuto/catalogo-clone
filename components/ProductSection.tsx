@@ -16,7 +16,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 3500.00,
     description: "Equipamento completo para treino funcional e musculação.",
     image: "/images/acetato-trembo.jpg",
-    category: "Equipamentos",
+    category: "",
   },
   {
     id: 2,
@@ -24,7 +24,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 1791.00,
     description: "Banco reforçado para diversas posições de supino.",
     image: "/images/boldenona.jpg",
-    category: "Equipamentos",
+    category: "",
   },
   {
     id: 3,
@@ -32,7 +32,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 2418.27,
     description: "Bicicleta de alto padrão para cardio intenso.",
     image: "/images/cipionato.png",
-    category: "Equipamentos",
+    category: "",
   },
   {
     id: 4,
@@ -40,7 +40,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 1590.00,
     description: "Kit completo de halteres para peso livre.",
     image: "/images/clembuterol.png",
-    category: "Pesos Livres",
+    category: "",
   },
   {
     id: 5,
@@ -48,7 +48,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 299.90,
     description: "Barra reforçada com presilhas.",
     image: "/images/decaland.jpg",
-    category: "Equipamentos",
+    category: "",
   },
   {
     id: 6,
@@ -56,7 +56,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 199.90,
     description: "Promoção especial em peso de 16kg",
     image: "/images/durateston.jpg",
-    category: "Mega Ofertas",
+    category: "",
   }
 ];
 
