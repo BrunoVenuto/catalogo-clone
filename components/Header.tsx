@@ -13,13 +13,7 @@ export default function Header() {
   return (
     <>
       {/* HEADER TOP BAR (Optional Mini Bar like MegaGym) */}
-      <div className="w-full bg-mega-dark text-gray-300 text-xs py-2 hidden md:block border-b border-mega-slate">
-        <div className="max-w-7xl mx-auto px-4 flex justify-end gap-6">
-          <Link href="#atendimento" className="hover:text-mega-orange transition-colors">Atendimento</Link>
-          <Link href="#meus-pedidos" className="hover:text-mega-orange transition-colors">Meus Pedidos</Link>
-          <Link href="#minha-conta" className="hover:text-mega-orange transition-colors">Minha Conta</Link>
-        </div>
-      </div>
+
 
       {/* HEADER MAIN */}
       <header className="sticky top-0 z-50 bg-mega-dark w-full shadow-lg border-b-4 border-mega-orange">
