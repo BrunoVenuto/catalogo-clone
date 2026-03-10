@@ -97,24 +97,7 @@ export default function Header({ onSearch }: HeaderProps) {
         </div>
 
         {/* MOBILE SEARCH */}
-        <div className="md:hidden px-4 pb-4">
-          <div className="flex items-center relative">
-            <input
-              type="text"
-              placeholder="Busque por produtos"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-              className="w-full bg-white text-black py-2.5 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-mega-orange text-sm"
-            />
-            <button
-              className="absolute right-0 top-0 bottom-0 bg-mega-orange px-4 rounded-r-md flex items-center justify-center"
-              onClick={handleSearch}
-            >
-              <Search size={18} className="text-white" />
-            </button>
-          </div>
-        </div>
+        
       </header>
 
       {/* MENU MOBILE (seu código original aqui) */}
