@@ -34,8 +34,8 @@ export default function HeroSlider() {
         <div className="w-full md:w-1/2 flex flex-col justify-center items-start p-8 md:p-12 lg:p-16 bg-white shrink-0 relative overflow-hidden">
           {/* Faded Background Text like in the print "NOVO NOVO" */}
           <div className="absolute top-10 left-10 opacity-5 pointer-events-none flex flex-col leading-none">
-            <span className="text-[120px] font-black italic text-black">NOVO</span>
-            <span className="text-[120px] font-black italic text-black -mt-10">NOVO</span>
+            <span className="text-[120px] font-black italic text-black"></span>
+            <span className="text-[120px] font-black italic text-black -mt-10"></span>
           </div>
 
           <motion.div

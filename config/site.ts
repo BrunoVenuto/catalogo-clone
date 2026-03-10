@@ -20,7 +20,7 @@ export const siteConfig = {
   hero: {
     title: "PROJETO GIGA",
     subtitle:
-      "Resultados extremos para quem treina de verdade",
+      "Resultados extremos e produtos de confiança!",
     cta: "Conheça",
 
     imageDesktop: "/images/hero.png",
