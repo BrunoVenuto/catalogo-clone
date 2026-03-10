@@ -5,15 +5,13 @@ import { Product } from "@/config/products";
 import { addToCart } from "@/lib/cart";
 import { getProducts } from "@/services/products";
 import { X } from "lucide-react";
-
 import ProductCard from "./ProductCard";
 
-// MOCKUPS (Keep export for the seed script)
 export const MOCK_PRODUCTS: Product[] = [
   {
     id: 1,
     name: "ACETATO DE TREMBOLONA",
-    price: 3500.00,
+    price: 3500.0,
     description: "Equipamento completo para treino funcional e musculação.",
     image: "/images/acetato-trembo.jpg",
     category: "",
@@ -21,7 +19,7 @@ export const MOCK_PRODUCTS: Product[] = [
   {
     id: 2,
     name: "BOLDENONA",
-    price: 1791.00,
+    price: 1791.0,
     description: "Banco reforçado para diversas posições de supino.",
     image: "/images/boldenona.jpg",
     category: "",
@@ -37,7 +35,7 @@ export const MOCK_PRODUCTS: Product[] = [
   {
     id: 4,
     name: "CLEMBUTEROL",
-    price: 1590.00,
+    price: 1590.0,
     description: "Kit completo de halteres para peso livre.",
     image: "/images/clembuterol.png",
     category: "",
@@ -45,7 +43,7 @@ export const MOCK_PRODUCTS: Product[] = [
   {
     id: 5,
     name: "DECALAND",
-    price: 299.90,
+    price: 299.9,
     description: "Barra reforçada com presilhas.",
     image: "/images/decaland.jpg",
     category: "",
@@ -53,21 +51,27 @@ export const MOCK_PRODUCTS: Product[] = [
   {
     id: 6,
     name: "DURATESTON",
-    price: 199.90,
+    price: 199.9,
     description: "Promoção especial em peso de 16kg",
     image: "/images/durateston.jpg",
     category: "",
-  }
+  },
 ];
 
-export default function ProductSection() {
-  // Use MOCK_PRODUCTS to match the print for demonstration, since DB might be empty
+type ProductSectionProps = {
+  // termo vindo do Header (ou outro pai)
+  searchTerm?: string;
+};
+
+export default function ProductSection({ searchTerm = "" }: ProductSectionProps) {
   const [allProducts, setAllProducts] = useState<Product[]>(MOCK_PRODUCTS);
-  const [loading, setLoading] = useState(false); // Faked loading for now to show visual
+  const [loading, setLoading] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   useEffect(() => {
     async function loadData() {
       try {
+        setLoading(true);
         const data = await getProducts();
         if (data && data.length > 0) {
           setAllProducts(data);
@@ -81,15 +85,30 @@ export default function ProductSection() {
     loadData();
   }, []);
 
-
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-
-  // Filter mocked or db products based on selected tab (simplistic mapping)
-  const filtered = allProducts; // In a real scenario, map categories properly
+  // aplica filtro pelo nome (pode adicionar category/description se quiser)
+  const filtered = useMemo(() => {
+    if (!searchTerm.trim()) return allProducts;
+    const term = searchTerm.toLowerCase();
+    return allProducts.filter((p) =>
+      String(p.name).toLowerCase().includes(term)
+    );
+  }, [allProducts, searchTerm]);
 
   return (
     <section id="produtos" className="py-16 bg-mega-gray relative w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* título + info de filtro */}
+        <div className="mb-8 flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between">
+          <h2 className="text-2xl font-black text-white uppercase">
+            Produtos
+          </h2>
+          {searchTerm.trim() && (
+            <span className="text-sm text-gray-300">
+              Filtrando por:{" "}
+              <span className="font-semibold">{searchTerm}</span>
+            </span>
+          )}
+        </div>
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 text-mega-orange font-bold">
@@ -97,8 +116,13 @@ export default function ProductSection() {
             Carregando produtos...
           </div>
         ) : filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-gray-500 font-bold">
+          <div className="flex flex-col items-center justify-center py-20 text-gray-500 font-bold text-center">
             NENHUM PRODUTO ENCONTRADO
+            {searchTerm.trim() && (
+              <p className="mt-2 text-sm text-gray-400">
+                Não encontramos resultados para &quot;{searchTerm}&quot;.
+              </p>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -142,10 +166,7 @@ export default function ProductSection() {
               </div>
 
               <div className="md:w-1/2 p-6 md:p-8 flex flex-col overflow-y-auto">
-                <div className="flex justify-between items-start mb-4 hidden md:flex">
-                  <span className="text-xs bg-gray-200 text-gray-600 uppercase px-2 py-1 rounded font-bold">
-                    {selectedProduct.category || "Equipamento"}
-                  </span>
+                <div className="flex justify-end mb-4 hidden md:flex">
                   <button
                     className="text-gray-400 hover:text-black transition-colors"
                     onClick={() => setSelectedProduct(null)}
@@ -159,7 +180,7 @@ export default function ProductSection() {
                 </h3>
 
                 <p className="text-gray-600 text-sm mb-6 pb-6 border-b border-gray-100">
-                  {selectedProduct.description}
+                  {selectedProduct.description || "Produto sem descrição detalhada."}
                 </p>
 
                 <div className="mt-auto">
@@ -170,10 +191,16 @@ export default function ProductSection() {
                     <span className="text-4xl font-black text-mega-orange leading-none">
                       R$ {Number(selectedProduct.price).toFixed(2)}
                     </span>
-                    <span className="text-lg font-bold text-mega-orange pb-1">à vista</span>
+                    <span className="text-lg font-bold text-mega-orange pb-1">
+                      à vista
+                    </span>
                   </div>
                   <p className="text-sm text-gray-600 font-medium mb-6">
-                    ou <span className="font-bold">12x</span> de <span className="font-bold">R$ {(Number(selectedProduct.price) / 12).toFixed(2)}</span> sem juros
+                    ou <span className="font-bold">12x</span> de{" "}
+                    <span className="font-bold">
+                      R$ {(Number(selectedProduct.price) / 12).toFixed(2)}
+                    </span>{" "}
+                    sem juros
                   </p>
 
                   <button

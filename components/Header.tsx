@@ -2,34 +2,34 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { siteConfig } from "@/config/site";
 import { Search, ShoppingCart, User, Menu, X } from "lucide-react";
 
-export default function Header() {
+type HeaderProps = {
+  onSearch: (term: string) => void;
+};
+
+export default function Header({ onSearch }: HeaderProps) {
   const [open, setOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  function handleSearch() {
+    onSearch(searchTerm.trim());
+  }
 
   return (
     <>
-      {/* HEADER TOP BAR (Optional Mini Bar like MegaGym) */}
-
-
-      {/* HEADER MAIN */}
       <header className="sticky top-0 z-50 bg-mega-dark w-full shadow-lg border-b-4 border-mega-orange">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 h-20 md:h-24 flex items-center justify-between gap-4">
-
-          {/* LOGO */}
           <Link href="/" className="flex items-center gap-2 flex-shrink-0">
             <div className="relative h-12 w-32 sm:h-14 sm:w-40 flex items-center">
-              {/* Fallback text if logo is missing, matching the print "MEGA GYM EQUIPAMENTOS" */}
               <span className="text-2xl sm:text-3xl font-black text-mega-orange italic tracking-tighter">
                 MEGAGYM
               </span>
             </div>
           </Link>
 
-          {/* MENU DESKTOP */}
           <nav className="hidden lg:flex items-center gap-6 text-sm font-bold uppercase text-white tracking-wide">
             {siteConfig.menu.map((item, idx) => (
               <a
@@ -42,7 +42,8 @@ export default function Header() {
                     if (el) {
                       const headerOffset = 100;
                       const elementPosition = el.getBoundingClientRect().top;
-                      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                      const offsetPosition =
+                        elementPosition + window.pageYOffset - headerOffset;
                       window.scrollTo({ top: offsetPosition, behavior: "smooth" });
                     }
                   }
@@ -54,14 +55,20 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* SEARCH BAR & ICONS */}
+          {/* DESKTOP SEARCH */}
           <div className="hidden md:flex flex-1 max-w-md items-center relative ml-4">
             <input
               type="text"
               placeholder="Busque por produtos"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               className="w-full bg-white text-black py-2.5 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-mega-orange"
             />
-            <button className="absolute right-0 top-0 bottom-0 bg-mega-orange px-4 rounded-r-md flex items-center justify-center hover:bg-[#e65c00] transition-colors">
+            <button
+              className="absolute right-0 top-0 bottom-0 bg-mega-orange px-4 rounded-r-md flex items-center justify-center hover:bg-[#e65c00] transition-colors"
+              onClick={handleSearch}
+            >
               <Search size={20} className="text-white" />
             </button>
           </div>
@@ -79,8 +86,6 @@ export default function Header() {
                 0
               </span>
             </button>
-
-            {/* HAMBURGUER (MOBILE) */}
             <button
               onClick={() => setOpen(true)}
               className="lg:hidden text-white hover:text-mega-orange transition-colors"
@@ -89,25 +94,30 @@ export default function Header() {
               <Menu size={28} />
             </button>
           </div>
-
         </div>
 
-        {/* MOBILE SEARCH BAR */}
+        {/* MOBILE SEARCH */}
         <div className="md:hidden px-4 pb-4">
           <div className="flex items-center relative">
             <input
               type="text"
               placeholder="Busque por produtos"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               className="w-full bg-white text-black py-2.5 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-mega-orange text-sm"
             />
-            <button className="absolute right-0 top-0 bottom-0 bg-mega-orange px-4 rounded-r-md flex items-center justify-center">
+            <button
+              className="absolute right-0 top-0 bottom-0 bg-mega-orange px-4 rounded-r-md flex items-center justify-center"
+              onClick={handleSearch}
+            >
               <Search size={18} className="text-white" />
             </button>
           </div>
         </div>
       </header>
 
-      {/* MENU MOBILE */}
+      {/* MENU MOBILE (seu código original aqui) */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -125,7 +135,7 @@ export default function Header() {
               transition={{ duration: 0.3, ease: "easeOut" }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* TOPO MOBILE */}
+              {/* resto do menu mobile igual ao seu */}
               <div className="flex items-center justify-between mb-8 border-b border-mega-slate pb-4">
                 <span className="text-2xl font-black text-mega-orange italic tracking-tighter">
                   MEGAGYM
@@ -139,7 +149,6 @@ export default function Header() {
                 </button>
               </div>
 
-              {/* NAV MOBILE */}
               <nav className="flex flex-col gap-4 text-lg font-bold uppercase text-white tracking-wide flex-1 overflow-y-auto">
                 {siteConfig.menu.map((item, idx) => (
                   <a
@@ -152,8 +161,14 @@ export default function Header() {
                         if (el) {
                           const headerOffset = 100;
                           const elementPosition = el.getBoundingClientRect().top;
-                          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                          const offsetPosition =
+                            elementPosition +
+                            window.pageYOffset -
+                            headerOffset;
+                          window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth",
+                          });
                         }
                       }
                       setOpen(false);
@@ -164,7 +179,6 @@ export default function Header() {
                   </a>
                 ))}
 
-                {/* CTA MOBILE */}
                 <button
                   onClick={() => {
                     setOpen(false);

@@ -38,7 +38,7 @@ export default function ProductCard({ product, onOpen, onAdd }: Props) {
 
         <div className="flex-grow">
           <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">
-            {product.category}
+            {/*product.category*/}
           </p>
           <h3 className="text-sm md:text-base font-bold uppercase text-gray-800 leading-tight mb-2 line-clamp-2 hover:text-mega-orange transition-colors">
             {product.name}

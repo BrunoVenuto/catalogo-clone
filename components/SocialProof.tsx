@@ -3,12 +3,12 @@
 import { motion } from "framer-motion";
 
 const testimonials = [
-  { name: "Carlos M.", text: "Equipamento chegou super rápido. Qualidade excepcional, montagem fácil. Recomendo muito a MegaGym!" },
-  { name: "Mariana S.", text: "O Mega Rack mudou minha rotina. Construção muito sólida e versátil para treinar em casa." },
-  { name: "Ricardo P.", text: "Atendimento top do início ao fim. As polias são muito suaves e os pesos bem calibrados." },
-  { name: "Fernanda L.", text: "Melhor investimento que fiz para minha academia residencial. Custo benefício imbatível." },
-  { name: "André T.", text: "Acabamento da pintura eletrostática é perfeito. Equipamento de academia profissional mesmo." },
-  { name: "Juliana R.", text: "Comprei a bicicleta de spinning e me surpreendi. Muito silenciosa e resistente." },
+  { name: "Carlos M.", text: "Produto chegou super rápido. Qualidade excepcional. Recomendo muito o vendedor!" },
+  { name: "Mariana S.", text: "O produto mudou minha rotina. Construção muito sólida e rápida." },
+  { name: "Ricardo P.", text: "Atendimento top do início ao fim. Produto 100% testado em exames!." },
+  { name: "Fernanda L.", text: "Melhor investimento que fiz! Custo benefício imbatível." },
+  { name: "André T.", text: "Qualidade e resultado garantido! Comprarei mais vezes." },
+  { name: "Juliana R.", text: "Gostei tanto que indiquei todos da minha academia! Top !" },
 ];
 
 function getInitials(name: string) {
@@ -32,7 +32,7 @@ export default function SocialProof() {
             O QUE NOSSOS CLIENTES DIZEM
           </h2>
           <p className="text-gray-500 font-medium max-w-2xl mx-auto mt-4">
-            A satisfação de quem já treina com os melhores equipamentos do mercado.
+            A satisfação de quem já usa os melhores produtos  do mercado.
           </p>
           <div className="w-24 h-1 bg-mega-orange mx-auto mt-6"></div>
         </motion.div>
