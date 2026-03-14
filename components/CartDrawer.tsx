@@ -180,7 +180,7 @@ export default function CartDrawer() {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="h-full w-full max-w-md bg-white p-0 text-gray-900 flex flex-col shadow-[-10px_0_30px_rgba(0,0,0,0.1)] relative"
+              className="h-full w-full max-w-md bg-[#121212] p-0 text-gray-100 flex flex-col shadow-[-10px_0_30px_rgba(0,0,0,0.5)] relative border-l border-gray-800"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
@@ -188,25 +188,25 @@ export default function CartDrawer() {
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header Drawer */}
-              <div className="flex justify-between items-center px-6 py-5 border-b border-gray-100 bg-gray-50">
-                <h2 className="text-lg font-black uppercase text-gray-900 flex items-center gap-3">
+              <div className="flex justify-between items-center px-6 py-5 border-b border-gray-800 bg-[#1a1a1a]">
+                <h2 className="text-lg font-black uppercase text-gray-100 flex items-center gap-3">
                   <ShoppingCart className="w-5 h-5 text-mega-orange" />
                   Seu Carrinho
                 </h2>
-                <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-800 transition-colors p-2 rounded-full hover:bg-gray-200">
+                <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-200 transition-colors p-2 rounded-full hover:bg-gray-800">
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               {/* Itens Drawer */}
-              <div className="flex-1 p-6 space-y-4 overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+              <div className="flex-1 p-6 space-y-4 overflow-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
                 {items.map((item, index) => (
                   <div
                     key={`${item.name}-${index}`}
-                    className="flex justify-between items-center bg-gray-50 border border-gray-100 p-4 rounded-lg group hover:border-mega-orange transition-colors shadow-sm"
+                    className="flex justify-between items-center bg-[#1a1a1a] border border-gray-800 p-4 rounded-lg group hover:border-mega-orange transition-colors shadow-sm"
                   >
                     <div className="flex-1 pr-4">
-                      <p className="font-bold text-gray-800 text-sm mb-1 leading-tight">{item.name}</p>
+                      <p className="font-bold text-gray-200 text-sm mb-1 leading-tight">{item.name}</p>
                       <p className="text-mega-orange font-bold text-sm">
                         R$ {Number(item.price).toFixed(2)}
                       </p>
@@ -223,12 +223,12 @@ export default function CartDrawer() {
               </div>
 
               {/* Footer Drawer */}
-              <div className="border-t border-gray-100 p-6 space-y-4 bg-white shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+              <div className="border-t border-gray-800 p-6 space-y-4 bg-[#121212] shadow-[0_-10px_20px_rgba(0,0,0,0.2)]">
                 <div className="flex justify-between items-end mb-4">
-                  <span className="text-gray-500 font-bold uppercase tracking-wider text-sm">Subtotal:</span>
+                  <span className="text-gray-400 font-bold uppercase tracking-wider text-sm">Subtotal:</span>
                   <div className="text-right">
-                    <span className="text-2xl font-black text-gray-900 block leading-none">R$ {total.toFixed(2)}</span>
-                    <span className="text-xs text-gray-400 font-medium">No PIX / Boleto</span>
+                    <span className="text-2xl font-black text-gray-100 block leading-none">R$ {total.toFixed(2)}</span>
+                    <span className="text-xs text-gray-500 font-medium">No PIX / Boleto</span>
                   </div>
                 </div>
 
@@ -243,7 +243,7 @@ export default function CartDrawer() {
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => setConsultoriaOpen(true)}
-                    className="w-full border border-gray-300 bg-white py-3 rounded-md font-bold text-gray-700 text-xs uppercase flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors"
+                    className="w-full border border-gray-700 bg-[#1a1a1a] py-3 rounded-md font-bold text-gray-300 text-xs uppercase flex items-center justify-center gap-2 hover:bg-gray-800 hover:text-white transition-colors"
                   >
                     <MessageCircle className="w-4 h-4" />
                     Suporte
@@ -251,7 +251,7 @@ export default function CartDrawer() {
 
                   <button
                     onClick={handleClear}
-                    className="w-full border border-red-200 bg-red-50 py-3 rounded-md text-red-600 font-bold text-xs uppercase hover:bg-red-100 hover:text-red-700 hover:border-red-300 transition-colors"
+                    className="w-full border border-red-900/50 bg-red-950/20 py-3 rounded-md text-red-500 font-bold text-xs uppercase hover:bg-red-900/40 hover:text-red-400 hover:border-red-800 transition-colors"
                   >
                     Limpar
                   </button>

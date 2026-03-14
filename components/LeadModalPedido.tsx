@@ -91,7 +91,7 @@ export default function LeadModalPedido({ open, onClose, onConfirm }: Props) {
           onClick={onClose}
         >
           <motion.div
-            className="w-full sm:max-w-xl bg-white text-gray-900 rounded-t-xl sm:rounded-xl shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[85vh] relative overflow-hidden"
+            className="w-full sm:max-w-xl bg-[#121212] text-gray-100 rounded-t-xl sm:rounded-xl shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[85vh] relative overflow-hidden border border-gray-800"
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 50, opacity: 0 }}
@@ -99,12 +99,12 @@ export default function LeadModalPedido({ open, onClose, onConfirm }: Props) {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+            <div className="px-6 py-4 border-b border-gray-800 flex justify-between items-center bg-[#1a1a1a]">
               <div>
-                <h2 className="text-xl font-black uppercase text-gray-900 tracking-tight">
+                <h2 className="text-xl font-black uppercase text-gray-100 tracking-tight">
                   Finalizar Pedido
                 </h2>
-                <p className="text-sm text-gray-500 mt-1 font-medium">
+                <p className="text-sm text-gray-400 mt-1 font-medium">
                   Preencha seus dados de entrega
                 </p>
               </div>
@@ -129,7 +129,7 @@ export default function LeadModalPedido({ open, onClose, onConfirm }: Props) {
                   { label: "Complemento / Referência", value: reference, setter: setReference, placeholder: "Ex: Apto 42, Próximo ao mercado" },
                 ].map((field, idx) => (
                   <div key={idx} className="relative group">
-                    <label className="text-xs font-bold text-gray-600 block mb-1 uppercase tracking-wide">
+                    <label className="text-xs font-bold text-gray-400 block mb-1 uppercase tracking-wide">
                       {field.label}
                     </label>
                     <input
@@ -137,7 +137,7 @@ export default function LeadModalPedido({ open, onClose, onConfirm }: Props) {
                       onChange={(e) => field.setter(field.formatter ? field.formatter(e.target.value) : e.target.value)}
                       inputMode={(field.mode as any) || "text"}
                       placeholder={field.placeholder}
-                      className="w-full bg-white border border-gray-300 rounded-md px-4 py-3 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-shadow"
+                      className="w-full bg-[#1a1a1a] border border-gray-800 rounded-md px-4 py-3 text-gray-100 text-sm placeholder-gray-500 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-shadow"
                     />
                   </div>
                 ))}
@@ -146,13 +146,13 @@ export default function LeadModalPedido({ open, onClose, onConfirm }: Props) {
 
             {/* Footer */}
             <div
-              className="px-6 py-4 border-t border-gray-100 bg-white sticky bottom-0"
+              className="px-6 py-4 border-t border-gray-800 bg-[#121212] sticky bottom-0"
               style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 16px)" }}
             >
               <div className="flex gap-4">
                 <button
                   onClick={onClose}
-                  className="flex-1 py-3 font-bold uppercase text-sm border border-gray-300 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors"
+                  className="flex-1 py-3 font-bold uppercase text-sm border border-gray-700 text-gray-300 hover:bg-[#1a1a1a] hover:text-white rounded-md transition-colors"
                 >
                   Cancelar
                 </button>

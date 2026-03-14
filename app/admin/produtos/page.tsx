@@ -172,21 +172,21 @@ export default function AdminProdutosPage() {
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-20 mt-8">
       {/* HEADER PAGE */}
-      <div className="flex items-center justify-between border-l-4 border-mega-orange pl-4 py-2 bg-gradient-to-r from-orange-50 to-transparent rounded-r-lg">
+      <div className="flex items-center justify-between border-l-4 border-mega-orange pl-4 py-2 bg-gradient-to-r from-mega-orange/10 to-transparent rounded-r-lg">
         <div>
-          <h2 className="text-2xl font-extrabold text-gray-900 uppercase tracking-tight">Catálogo de Produtos</h2>
-          <p className="text-sm text-gray-500 mt-1 font-medium">Gerencie os itens da loja</p>
+          <h2 className="text-2xl font-extrabold text-gray-100 uppercase tracking-tight">Catálogo de Produtos</h2>
+          <p className="text-sm text-gray-400 mt-1 font-medium">Gerencie os itens da loja</p>
         </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8 mt-6">
 
         {/* FORMULÁRIO */}
-        <div className="lg:col-span-1 border border-gray-200 bg-white rounded-xl shadow-sm p-6 self-start sticky top-24">
-          <h3 className="text-lg font-black text-gray-900 mb-6 uppercase tracking-tight border-b border-gray-100 pb-4 flex justify-between items-center">
+        <div className="lg:col-span-1 border border-gray-800 bg-[#1a1a1a] rounded-xl shadow-sm p-6 self-start sticky top-24">
+          <h3 className="text-lg font-black text-gray-100 mb-6 uppercase tracking-tight border-b border-gray-800 pb-4 flex justify-between items-center">
             {editingId ? "Editar Produto" : "Novo Produto"}
             {editingId && (
-              <button onClick={startCreate} className="text-xs text-red-600 bg-red-50 border border-red-200 px-3 py-1.5 rounded hover:bg-red-600 hover:text-white transition-colors font-bold uppercase">
+              <button onClick={startCreate} className="text-xs text-red-500 bg-red-950/20 border border-red-900/50 px-3 py-1.5 rounded hover:bg-red-900/40 hover:text-red-400 transition-colors font-bold uppercase">
                 Cancelar Edição
               </button>
             )}
@@ -194,50 +194,50 @@ export default function AdminProdutosPage() {
 
           <div className="space-y-5 text-sm mt-4">
             <div>
-              <label className="block text-gray-700 font-bold uppercase tracking-wide mb-1.5 text-xs">Nome do Produto</label>
+              <label className="block text-gray-400 font-bold uppercase tracking-wide mb-1.5 text-xs">Nome do Produto</label>
               <input
                 value={draft.name}
                 onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
-                className="w-full bg-gray-50 border border-gray-300 rounded-md p-3 text-gray-900 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all"
+                className="w-full bg-[#121212] border border-gray-800 rounded-md p-3 text-gray-100 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all placeholder-gray-600"
                 placeholder="Ex: Banco Regulável"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-gray-700 font-bold uppercase tracking-wide mb-1.5 text-xs">Preço (R$)</label>
+                <label className="block text-gray-400 font-bold uppercase tracking-wide mb-1.5 text-xs">Preço (R$)</label>
                 <input
                   value={draft.price}
                   onChange={(e) => setDraft((d) => ({ ...d, price: e.target.value }))}
                   inputMode="decimal"
-                  className="w-full bg-gray-50 border border-gray-300 rounded-md p-3 text-gray-900 font-bold focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all"
+                  className="w-full bg-[#121212] border border-gray-800 rounded-md p-3 text-gray-100 font-bold focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all placeholder-gray-600"
                   placeholder="0.00"
                 />
               </div>
               <div>
-                <label className="block text-gray-700 font-bold uppercase tracking-wide mb-1.5 text-xs">Categoria</label>
+                <label className="block text-gray-400 font-bold uppercase tracking-wide mb-1.5 text-xs">Categoria</label>
                 <input
                   value={draft.category}
                   onChange={(e) => setDraft((d) => ({ ...d, category: e.target.value }))}
-                  className="w-full bg-gray-50 border border-gray-300 rounded-md p-3 text-gray-900 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all"
+                  className="w-full bg-[#121212] border border-gray-800 rounded-md p-3 text-gray-100 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all placeholder-gray-600"
                   placeholder="Equipamentos"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-gray-700 font-bold uppercase tracking-wide mb-1.5 text-xs">Descrição</label>
+              <label className="block text-gray-400 font-bold uppercase tracking-wide mb-1.5 text-xs">Descrição</label>
               <textarea
                 value={draft.description}
                 onChange={(e) => setDraft((d) => ({ ...d, description: e.target.value }))}
                 rows={4}
-                className="w-full bg-gray-50 border border-gray-300 rounded-md p-3 text-gray-900 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all resize-none"
+                className="w-full bg-[#121212] border border-gray-800 rounded-md p-3 text-gray-100 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all resize-none placeholder-gray-600"
                 placeholder="Detalhes técnicos do item..."
               />
             </div>
 
-            <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
-              <label className="block text-gray-700 font-bold uppercase tracking-wide mb-2 text-xs">Imagem do Produto</label>
+            <div className="border border-gray-800 rounded-md p-4 bg-[#121212]">
+              <label className="block text-gray-400 font-bold uppercase tracking-wide mb-2 text-xs">Imagem do Produto</label>
               <input
                 type="file"
                 accept="image/*"
@@ -246,7 +246,7 @@ export default function AdminProdutosPage() {
                     setImageFile(e.target.files[0]);
                   }
                 }}
-                className="w-full text-xs text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gray-200 file:text-gray-700 file:font-bold hover:file:bg-gray-300 transition-colors cursor-pointer"
+                className="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gray-800 file:text-gray-300 file:font-bold hover:file:bg-gray-700 transition-colors cursor-pointer"
               />
 
               <div className="mt-4 text-center">
@@ -256,13 +256,13 @@ export default function AdminProdutosPage() {
               <input
                 value={draft.image}
                 onChange={(e) => setDraft((d) => ({ ...d, image: e.target.value }))}
-                className="mt-2 w-full bg-white border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:border-mega-orange text-xs"
+                className="mt-2 w-full bg-[#1a1a1a] border border-gray-800 rounded-md p-2 text-gray-100 focus:outline-none focus:border-mega-orange text-xs placeholder-gray-600"
                 placeholder="https://suaimagem.com/foto.jpg"
               />
 
               {/* PREVIEW */}
               {(imageFile || draft.image) && (
-                <div className="mt-4 border border-gray-200 rounded p-1 bg-white w-32 mx-auto shadow-sm">
+                <div className="mt-4 border border-gray-800 rounded p-1 bg-[#1a1a1a] w-32 mx-auto shadow-sm">
                   <img
                     src={imageFile ? URL.createObjectURL(imageFile) : draft.image}
                     alt="Preview"
@@ -273,7 +273,7 @@ export default function AdminProdutosPage() {
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 p-3 mt-4 text-xs text-red-700 rounded-md uppercase text-center font-bold">
+              <div className="bg-red-950/20 border border-red-900/50 p-3 mt-4 text-xs text-red-500 rounded-md uppercase text-center font-bold">
                 {error}
               </div>
             )}
@@ -291,14 +291,14 @@ export default function AdminProdutosPage() {
         {/* LISTA DE PRODUTOS */}
         <div className="lg:col-span-2">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-            <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight">
+            <h3 className="text-lg font-black text-gray-100 uppercase tracking-tight">
               Todos os Produtos ({products.length})
             </h3>
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar por nome ou categoria..."
-              className="w-full sm:w-64 bg-white border border-gray-300 rounded-md p-2 text-gray-900 text-sm focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange shadow-sm"
+              className="w-full sm:w-64 bg-[#1a1a1a] border border-gray-800 rounded-md p-2 text-gray-100 text-sm focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange shadow-sm placeholder-gray-600"
             />
           </div>
 
@@ -306,18 +306,18 @@ export default function AdminProdutosPage() {
             {filtered.map((p) => (
               <div
                 key={p.id}
-                className="flex flex-col md:flex-row items-center justify-between border border-gray-200 rounded-xl bg-white shadow-sm hover:shadow-md hover:border-mega-orange transition-all group p-4 gap-4"
+                className="flex flex-col md:flex-row items-center justify-between border border-gray-800 rounded-xl bg-[#1a1a1a] shadow-sm hover:shadow-md hover:border-mega-orange transition-all group p-4 gap-4"
               >
                 <div className="flex items-center gap-4 w-full md:w-auto">
-                  <div className="w-16 h-16 flex-shrink-0 border border-gray-100 rounded bg-gray-50 flex items-center justify-center relative overflow-hidden">
+                  <div className="w-16 h-16 flex-shrink-0 border border-gray-800 rounded bg-[#121212] flex items-center justify-center relative overflow-hidden">
                     {p.image ? (
-                      <img src={p.image} alt={p.name} className="absolute inset-0 w-full h-full object-contain p-1" />
+                      <img src={p.image} alt={p.name} className="absolute inset-0 w-full h-full object-contain p-1 mix-blend-screen" />
                     ) : (
-                      <span className="text-gray-300 font-black text-2xl">M</span>
+                      <span className="text-gray-700 font-black text-2xl">M</span>
                     )}
                   </div>
                   <div>
-                    <h4 className="font-black text-gray-900 text-base leading-tight group-hover:text-mega-orange transition-colors">
+                    <h4 className="font-black text-gray-100 text-base leading-tight group-hover:text-mega-orange transition-colors">
                       {p.name}
                     </h4>
                     <div className="text-xs text-gray-500 uppercase font-bold mt-1.5">
@@ -332,14 +332,14 @@ export default function AdminProdutosPage() {
                 <div className="flex w-full md:w-auto gap-2 text-xs font-bold uppercase tracking-wide">
                   <button
                     onClick={() => startEdit(p)}
-                    className="flex-1 md:flex-none border border-gray-300 bg-white text-gray-700 rounded px-4 py-2 hover:bg-gray-100 hover:text-black transition-colors"
+                    className="flex-1 md:flex-none border border-gray-700 bg-[#121212] text-gray-300 rounded px-4 py-2 hover:bg-gray-800 hover:text-white transition-colors"
                   >
                     Editar
                   </button>
                   <button
                     onClick={() => handleRemove(p.id)}
                     disabled={busy}
-                    className="flex-1 md:flex-none border border-red-200 bg-red-50 text-red-600 rounded px-4 py-2 hover:bg-red-600 hover:text-white transition-colors"
+                    className="flex-1 md:flex-none border border-red-900/50 bg-red-950/20 text-red-500 rounded px-4 py-2 hover:bg-red-900/40 hover:text-red-400 transition-colors"
                   >
                     Excluir
                   </button>
@@ -348,7 +348,7 @@ export default function AdminProdutosPage() {
             ))}
 
             {filtered.length === 0 && (
-              <div className="p-12 text-center text-gray-400 font-medium bg-gray-50 border border-dashed border-gray-200 rounded-xl">
+              <div className="p-12 text-center text-gray-500 font-medium bg-[#1a1a1a] border border-dashed border-gray-800 rounded-xl">
                 Nenhum produto cadastrado ou encontrado na busca.
               </div>
             )}

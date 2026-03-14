@@ -40,7 +40,7 @@ export default function LeadModalConsultoria({
           onClick={onClose}
         >
           <motion.div
-            className="w-full max-w-sm bg-white text-gray-900 rounded-xl shadow-2xl overflow-hidden relative"
+            className="w-full max-w-sm bg-[#121212] text-gray-100 rounded-xl shadow-2xl overflow-hidden relative border border-gray-800"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
@@ -48,12 +48,12 @@ export default function LeadModalConsultoria({
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex justify-between items-center px-6 py-4 bg-gray-50 border-b border-gray-100">
+            <div className="flex justify-between items-center px-6 py-4 bg-[#1a1a1a] border-b border-gray-800">
               <div>
-                <h2 className="text-lg font-black uppercase text-gray-900 tracking-tight">
+                <h2 className="text-lg font-black uppercase text-gray-100 tracking-tight">
                   Atendimento Especializado
                 </h2>
-                <p className="text-xs text-gray-500 font-medium mt-1">
+                <p className="text-xs text-gray-400 font-medium mt-1">
                   Fale com um consultor MegaGym
                 </p>
               </div>
@@ -65,7 +65,7 @@ export default function LeadModalConsultoria({
             {/* Content */}
             <div className="p-6 space-y-4">
               <div className="relative group">
-                <label className="text-xs font-bold text-gray-600 block mb-1 uppercase tracking-wide">
+                <label className="text-xs font-bold text-gray-400 block mb-1 uppercase tracking-wide">
                   Nome Completo
                 </label>
                 <input
@@ -74,12 +74,12 @@ export default function LeadModalConsultoria({
                   onChange={(e) =>
                     setName(e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, ""))
                   }
-                  className="w-full bg-white border border-gray-300 rounded-md px-4 py-3 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-shadow"
+                  className="w-full bg-[#1a1a1a] border border-gray-800 rounded-md px-4 py-3 text-gray-100 text-sm placeholder-gray-500 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-shadow"
                 />
               </div>
 
               <div className="relative group">
-                <label className="text-xs font-bold text-gray-600 block mb-1 uppercase tracking-wide">
+                <label className="text-xs font-bold text-gray-400 block mb-1 uppercase tracking-wide">
                   Celular / WhatsApp
                 </label>
                 <input
@@ -89,18 +89,18 @@ export default function LeadModalConsultoria({
                   onChange={(e) =>
                     setPhone(e.target.value.replace(/\D/g, ""))
                   }
-                  className="w-full bg-white border border-gray-300 rounded-md px-4 py-3 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-shadow"
+                  className="w-full bg-[#1a1a1a] border border-gray-800 rounded-md px-4 py-3 text-gray-100 text-sm placeholder-gray-500 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-shadow"
                 />
               </div>
 
               <div className="relative group">
-                <label className="text-xs font-bold text-gray-600 block mb-1 uppercase tracking-wide">
+                <label className="text-xs font-bold text-gray-400 block mb-1 uppercase tracking-wide">
                   Qual o seu objetivo?
                 </label>
                 <select
                   value={goal}
                   onChange={(e) => setGoal(e.target.value)}
-                  className="w-full bg-white border border-gray-300 rounded-md px-4 py-3 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-shadow appearance-none"
+                  className="w-full bg-[#1a1a1a] border border-gray-800 rounded-md px-4 py-3 text-gray-100 text-sm placeholder-gray-500 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-shadow appearance-none"
                 >
                   <option value="">Selecione uma opção</option>
                   <option value="Montar Academia">BULKING</option>
@@ -108,13 +108,13 @@ export default function LeadModalConsultoria({
                   <option value="Acessórios e Pesos">MANUTENÇÃO</option>
                   <option value="Dúvida Geral">DÚVIDA GERAL / OUTRO</option>
                 </select>
-                <div className="absolute right-4 top-1/2 mt-3 -translate-y-1/2 pointer-events-none text-gray-400 font-mono text-xs">▼</div>
+                <div className="absolute right-4 top-1/2 mt-3 -translate-y-1/2 pointer-events-none text-gray-500 font-mono text-xs">▼</div>
               </div>
 
-              <div className="flex gap-4 mt-8 pt-6 border-t border-gray-100">
+              <div className="flex gap-4 mt-8 pt-6 border-t border-gray-800">
                 <button
                   onClick={onClose}
-                  className="flex-1 py-3 font-bold uppercase text-xs border border-gray-300 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors"
+                  className="flex-1 py-3 font-bold uppercase text-xs border border-gray-700 text-gray-300 hover:bg-[#1a1a1a] hover:text-white rounded-md transition-colors"
                 >
                   Cancelar
                 </button>

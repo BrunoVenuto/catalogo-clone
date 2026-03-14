@@ -23,8 +23,7 @@ export default function HeroSlider() {
     <section id="home" className="relative w-full bg-transparent overflow-hidden">
       {/* Container Background Split (Desktop) */}
       <div className="absolute inset-0 flex">
-        <div className="w-full md:w-1/2 bg-transparent"></div>
-        <div className="hidden md:block w-1/2 bg-mega-orange"></div>
+        <div className="w-full bg-transparent"></div>
       </div>
 
       {/* Content wrapper */}
@@ -65,7 +64,7 @@ export default function HeroSlider() {
         </div>
 
         {/* Right Area - Images */}
-        <div className="w-full md:w-1/2 bg-mega-orange relative flex items-center justify-center p-0 sm:p-4 md:p-8 overflow-hidden min-h-[50vh] md:min-h-[400px]">
+        <div className="w-full md:w-1/2 bg-transparent relative flex items-center justify-center p-0 sm:p-4 md:p-8 overflow-hidden min-h-[50vh] md:min-h-[400px]">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -73,7 +72,7 @@ export default function HeroSlider() {
             className="relative w-full h-full flex items-center justify-center"
           >
             {/* Main Product Image Mockup. */}
-            <div className="relative w-full h-full md:max-w-[700px] lg:max-w-[800px] aspect-square md:aspect-[4/3] bg-black/20 md:rounded-xl md:shadow-2xl overflow-hidden border-0 md:border-4 border-gray-800 flex items-center justify-center">
+            <div className="relative w-full h-full md:max-w-[700px] lg:max-w-[800px] aspect-square md:aspect-[4/3] bg-black/20 md:rounded-xl md:shadow-2xl overflow-hidden border-0 md:border-4 border-mega-orange flex items-center justify-center">
               <picture className="w-full h-full flex items-center justify-center">
                 <source srcSet={siteConfig.hero.imageDesktop} media="(min-width: 768px)" />
                 <img
