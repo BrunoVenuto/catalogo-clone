@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { siteConfig } from "@/config/site";
+import { getCart } from "@/lib/cart";
 import { Search, ShoppingCart, User, Menu, X } from "lucide-react";
-
 type HeaderProps = {
   onSearch: (term: string) => void;
 };
@@ -13,6 +13,23 @@ type HeaderProps = {
 export default function Header({ onSearch }: HeaderProps) {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    function updateCartCount() {
+      setCartCount(getCart().length);
+    }
+
+    // Inicializa a contagem do carrinho
+    updateCartCount();
+
+    // Escuta os eventos disparados no cart.ts toda vez que o carrinho muda
+    window.addEventListener("cart:update", updateCartCount);
+
+    return () => {
+      window.removeEventListener("cart:update", updateCartCount);
+    };
+  }, []);
 
   function handleSearch() {
     onSearch(searchTerm.trim());
@@ -83,9 +100,11 @@ export default function Header({ onSearch }: HeaderProps) {
               className="flex flex-col items-center hover:text-mega-orange transition-colors relative"
             >
               <ShoppingCart size={24} />
-              <span className="absolute -top-2 -right-2 bg-mega-orange text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">
-                0
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-mega-orange text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
             </button>
             <button
               onClick={() => setOpen(true)}

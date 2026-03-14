@@ -77,7 +77,7 @@ export default function HeroSlider() {
                 <source srcSet={siteConfig.hero.imageDesktop} media="(min-width: 768px)" />
                 <img
                   src={siteConfig.hero.imageMobile || siteConfig.hero.imageDesktop}
-                  alt="Banner principal mega gym"
+                  alt="Banner principal MG PHARMA"
                   className="w-full h-full object-cover object-center"
                   onError={(e) => {
                     // Fallback visual if image does not load

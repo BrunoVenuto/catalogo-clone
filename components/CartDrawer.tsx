@@ -114,7 +114,7 @@ export default function CartDrawer() {
     }
 
     const message =
-      `*NOVO PEDIDO MEGA GYM*\n\n` +
+      `*NOVO PEDIDO MG PHARMA*\n\n` +
       `*Dados do Cliente:*\n` +
       `Nome: ${data.name}\n` +
       `CEP: ${data.cep}\n` +
@@ -142,7 +142,7 @@ export default function CartDrawer() {
 
   function handleConsultoriaSubmit(data: ConsultoriaData) {
     const message =
-      `*Atendimento Mega Gym Solicitado*\n\n` +
+      `*Atendimento MG PHARMA Solicitado*\n\n` +
       `Nome: ${data.name}\n` +
       `WhatsApp: ${data.phone}\n` +
       `Objetivo: ${data.goal}\n\n` +

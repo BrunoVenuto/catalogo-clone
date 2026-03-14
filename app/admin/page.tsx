@@ -119,7 +119,7 @@ export default function AdminPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full bg-[#121212] border border-gray-800 rounded-md p-3 text-gray-100 focus:outline-none focus:border-mega-orange focus:ring-1 focus:ring-mega-orange transition-all placeholder-gray-600"
-              placeholder="admin@megagym.com"
+              placeholder="admin@mgpharma.com"
               required
             />
           </div>

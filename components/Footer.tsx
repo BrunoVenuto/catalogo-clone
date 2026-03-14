@@ -11,7 +11,7 @@ export default function Footer() {
               MG PHARMA
             </span>
             <p className="text-sm text-gray-400 mt-4 leading-relaxed max-w-xs">
-              O maior estoque de equipamentos de musculação. Estrutura profissional para o seu espaço de treino.
+              O maior estoque de fármacos voltados para musculação. Estrutura profissional para o seu desenvolvimento no treino.
             </p>
           </div>
 
@@ -54,7 +54,7 @@ export default function Footer() {
         {/* Bottom area */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
           <p>
-            © {new Date().getFullYear()} MegaGym Equipamentos. Todos os direitos reservados.
+            © {new Date().getFullYear()} MG PARMA Anabols. Todos os direitos reservados.
           </p>
           <div className="flex gap-4">
             <img src="https://placehold.co/100x30/1A1A1A/333333/png?text=Pagamentos" alt="Pagamentos" className="h-6" />

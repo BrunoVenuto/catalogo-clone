@@ -2,8 +2,8 @@ import Link from "next/link";
 import AdminLogoutButton from "@/components/AdminLogoutButton";
 
 export const metadata = {
-  title: 'Painel MegaGym | Administração',
-  description: 'Gerenciamento da loja e produtos MegaGym.',
+  title: 'Painel MG PHARMA | Administração',
+  description: 'Gerenciamento da loja e produtos MG PHARMA.',
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

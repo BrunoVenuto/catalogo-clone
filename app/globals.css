@@ -33,3 +33,12 @@ body {
 .mega-button:hover {
   background-color: #e65c00;
 }
+
+@keyframes pulse-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+}
+
+.animate-pulse-scale {
+  animation: pulse-scale 1.2s infinite;
+}

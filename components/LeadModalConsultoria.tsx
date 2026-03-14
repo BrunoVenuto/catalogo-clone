@@ -54,7 +54,7 @@ export default function LeadModalConsultoria({
                   Atendimento Especializado
                 </h2>
                 <p className="text-xs text-gray-400 font-medium mt-1">
-                  Fale com um consultor MegaGym
+                  Fale com um consultor MG PHARMA
                 </p>
               </div>
               <button onClick={onClose} className="text-gray-400 hover:text-gray-900 transition-colors p-2 rounded-full hover:bg-gray-200">

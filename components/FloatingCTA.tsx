@@ -47,7 +47,7 @@ export default function FloatingCTA() {
 
   function handleSubmit(data: ConsultoriaData) {
     const message =
-      `*Atendimento Mega Gym Solicitado*\n\n` +
+      `*Atendimento MG PHARMA Solicitado*\n\n` +
       `Nome: ${data.name}\n` +
       `WhatsApp: ${data.phone}\n` +
       `Objetivo: ${data.goal}\n\n` +
@@ -68,7 +68,7 @@ export default function FloatingCTA() {
             bg-[#25D366] hover:bg-[#1ebe5b]
             text-white p-4
             rounded-full shadow-xl
-            transition-transform duration-300 hover:scale-110
+            animate-pulse-scale md:hover:scale-110 md:transition-transform md:duration-300
           "
           title="Fale Conosco"
         >

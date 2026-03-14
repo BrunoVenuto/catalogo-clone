@@ -38,7 +38,7 @@ export default function LoginClient() {
     <div className="min-h-screen bg-[#121212] flex items-center justify-center p-6 font-sans">
       <div className="w-full max-w-md rounded-2xl border border-gray-800 bg-[#1a1a1a] p-8 shadow-xl">
         <h1 className="text-3xl font-black text-center text-gray-100 mb-2 uppercase tracking-tight">Login Admin</h1>
-        <p className="text-center text-gray-400 text-sm mb-6">Acesse o painel MegaGym</p>
+        <p className="text-center text-gray-400 text-sm mb-6">Acesse o painel MG PHARMA</p>
 
         {errorMsg ? (
           <div className="mb-6 rounded-md border border-red-900/50 bg-red-950/20 p-4 text-sm text-red-500">
