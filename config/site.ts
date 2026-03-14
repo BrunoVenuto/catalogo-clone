@@ -1,5 +1,5 @@
 export const siteConfig = {
-  name: "MegaGym Clone",
+  name: "MG PHARMA",
 
   // 📦 Número para RECEBER PEDIDOS (somente dígitos: 55 + DDD + número)
   whatsappPedido: "5531995453632", // <-- troque pelo SEU número real de pedidos
@@ -18,13 +18,13 @@ export const siteConfig = {
     "Olá, preciso de ajuda com meu projeto..",
 
   hero: {
-    title: "PROJETO GIGA",
+    title: "MG PHARMA",
     subtitle:
       "Resultados extremos e produtos de confiança!",
     cta: "Conheça",
 
-    imageDesktop: "/images/hero.png",
-    imageMobile: "/images/hero-mobile.jpg",
+    imageDesktop: "/images/mg-pharma-logo.jpg",
+    imageMobile: "/images/mg-pharma-logo.jpg",
   },
 
   menu: [

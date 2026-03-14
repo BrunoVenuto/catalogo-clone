@@ -11,7 +11,7 @@ export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState("")
 
   return (
-    <main className="bg-white">
+    <main className="bg-transparent">
       <Header onSearch={setSearchTerm} />
       <HeroSlider />
       <ProductSection searchTerm={searchTerm} />

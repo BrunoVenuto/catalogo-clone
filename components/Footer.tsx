@@ -8,7 +8,7 @@ export default function Footer() {
           {/* Logo Column */}
           <div className="col-span-1 md:col-span-1">
             <span className="text-3xl font-black text-mega-orange italic tracking-tighter mb-4 block">
-              MEGAGYM
+              MG PHARMA
             </span>
             <p className="text-sm text-gray-400 mt-4 leading-relaxed max-w-xs">
               O maior estoque de equipamentos de musculação. Estrutura profissional para o seu espaço de treino.
@@ -45,7 +45,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-mega-orange font-bold">@</span>
-                <span>contato@megagym.com.br</span>
+                <span>contato@mgpharma.com.br</span>
               </li>
             </ul>
           </div>

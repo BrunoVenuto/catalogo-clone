@@ -95,7 +95,7 @@ export default function ProductSection({ searchTerm = "" }: ProductSectionProps)
   }, [allProducts, searchTerm]);
 
   return (
-    <section id="produtos" className="py-16 bg-mega-gray relative w-full">
+    <section id="produtos" className="py-16 bg-transparent relative w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* título + info de filtro */}
         <div className="mb-8 flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between">
@@ -144,12 +144,12 @@ export default function ProductSection({ searchTerm = "" }: ProductSectionProps)
             onClick={() => setSelectedProduct(null)}
           >
             <div
-              className="w-full max-w-3xl bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]"
+              className="w-full max-w-3xl bg-[#1a1a1a] rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="md:w-1/2 bg-gray-100 flex items-center justify-center p-6 relative">
+              <div className="md:w-1/2 bg-black/20 flex items-center justify-center p-6 relative">
                 <button
-                  className="absolute top-4 left-4 md:hidden bg-white rounded-full p-2 shadow-sm text-gray-500 hover:text-black"
+                  className="absolute top-4 left-4 md:hidden bg-[#1a1a1a] rounded-full p-2 shadow-sm text-gray-400 hover:text-white"
                   onClick={() => setSelectedProduct(null)}
                 >
                   <X size={20} />
@@ -168,18 +168,18 @@ export default function ProductSection({ searchTerm = "" }: ProductSectionProps)
               <div className="md:w-1/2 p-6 md:p-8 flex flex-col overflow-y-auto">
                 <div className="flex justify-end mb-4 hidden md:flex">
                   <button
-                    className="text-gray-400 hover:text-black transition-colors"
+                    className="text-gray-400 hover:text-white transition-colors"
                     onClick={() => setSelectedProduct(null)}
                   >
                     <X size={24} />
                   </button>
                 </div>
 
-                <h3 className="text-2xl font-black uppercase text-gray-900 tracking-tight leading-none mb-4">
+                <h3 className="text-2xl font-black uppercase text-gray-100 tracking-tight leading-none mb-4">
                   {selectedProduct.name}
                 </h3>
 
-                <p className="text-gray-600 text-sm mb-6 pb-6 border-b border-gray-100">
+                <p className="text-gray-300 text-sm mb-6 pb-6 border-b border-gray-800">
                   {selectedProduct.description || "Produto sem descrição detalhada."}
                 </p>
 

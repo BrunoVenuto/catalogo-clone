@@ -23,9 +23,10 @@ export default function Header({ onSearch }: HeaderProps) {
       <header className="sticky top-0 z-50 bg-mega-dark w-full shadow-lg border-b-4 border-mega-orange">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 h-20 md:h-24 flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="relative h-12 w-32 sm:h-14 sm:w-40 flex items-center">
-              <span className="text-2xl sm:text-3xl font-black text-mega-orange italic tracking-tighter">
-                MEGAGYM
+            <div className="relative flex items-center gap-2">
+              <img src={siteConfig.hero.imageDesktop} alt="MG Pharma Logo" className="h-12 w-12 sm:h-12 sm:w-12 object-contain rounded-md" />
+              <span className="text-xl sm:text-3xl font-black text-mega-orange italic tracking-tighter whitespace-nowrap">
+                MG PHARMA
               </span>
             </div>
           </Link>
@@ -97,7 +98,7 @@ export default function Header({ onSearch }: HeaderProps) {
         </div>
 
         {/* MOBILE SEARCH */}
-        
+
       </header>
 
       {/* MENU MOBILE (seu código original aqui) */}
@@ -120,9 +121,12 @@ export default function Header({ onSearch }: HeaderProps) {
             >
               {/* resto do menu mobile igual ao seu */}
               <div className="flex items-center justify-between mb-8 border-b border-mega-slate pb-4">
-                <span className="text-2xl font-black text-mega-orange italic tracking-tighter">
-                  MEGAGYM
-                </span>
+                <div className="flex items-center gap-2">
+                  <img src={siteConfig.hero.imageDesktop} alt="MG Pharma Logo" className="h-8 w-8 object-contain rounded-md" />
+                  <span className="text-2xl font-black text-mega-orange italic tracking-tighter whitespace-nowrap">
+                    MG PHARMA
+                  </span>
+                </div>
                 <button
                   onClick={() => setOpen(false)}
                   className="text-gray-400 hover:text-white transition-colors"

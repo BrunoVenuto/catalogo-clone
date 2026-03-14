@@ -17,12 +17,12 @@ export default function ProductCard({ product, onOpen, onAdd }: Props) {
   const originalPrice = (Number(product.price) * 1.2).toFixed(2);
 
   return (
-    <div className="group relative bg-white border border-gray-200 rounded-lg p-4 transition-all duration-300 hover:shadow-xl flex flex-col h-full">
+    <div className="group relative bg-[#1a1a1a] border border-gray-800 rounded-lg p-4 transition-all duration-300 hover:shadow-xl flex flex-col h-full">
 
 
       <button onClick={onOpen} className="w-full text-left relative z-10 flex flex-col flex-grow">
         {/* Image Container */}
-        <div className="relative overflow-hidden bg-white mb-4 rounded-md aspect-square flex items-center justify-center">
+        <div className="relative overflow-hidden bg-transparent mb-4 rounded-md aspect-square flex items-center justify-center">
           {product.image ? (
             <img
               src={product.image}
@@ -40,7 +40,7 @@ export default function ProductCard({ product, onOpen, onAdd }: Props) {
           <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">
             {/*product.category*/}
           </p>
-          <h3 className="text-sm md:text-base font-bold uppercase text-gray-800 leading-tight mb-2 line-clamp-2 hover:text-mega-orange transition-colors">
+          <h3 className="text-sm md:text-base font-bold uppercase text-gray-100 leading-tight mb-2 line-clamp-2 hover:text-mega-orange transition-colors">
             {product.name}
           </h3>
         </div>

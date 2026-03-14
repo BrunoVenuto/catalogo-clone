@@ -19,7 +19,7 @@ function getInitials(name: string) {
 
 export default function SocialProof() {
   return (
-    <section id="contato" className="py-20 bg-white text-gray-900 border-t border-gray-100 relative">
+    <section id="contato" className="py-20 bg-transparent text-gray-100 border-t border-gray-800 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -46,7 +46,7 @@ export default function SocialProof() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ y: -5 }}
-              className="bg-gray-50 border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300 flex flex-col h-full relative"
+              className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-6 hover:shadow-lg transition-all duration-300 flex flex-col h-full relative"
             >
               {/* Aspas decorativas */}
               <div className="absolute top-4 right-6 text-gray-200 font-serif text-6xl leading-none">
@@ -54,7 +54,7 @@ export default function SocialProof() {
               </div>
 
               {/* Texto */}
-              <p className="text-gray-600 text-sm leading-relaxed mb-6 font-medium flex-grow relative z-10 italic">
+              <p className="text-gray-300 text-sm leading-relaxed mb-6 font-medium flex-grow relative z-10 italic">
                 {t.text}
               </p>
 
@@ -64,7 +64,7 @@ export default function SocialProof() {
                   {getInitials(t.name)}
                 </div>
                 <div>
-                  <p className="font-black text-gray-800 uppercase">
+                  <p className="font-black text-gray-100 uppercase">
                     {t.name}
                   </p>
                   <div className="text-xs text-[#00D000] mt-0.5 flex items-center gap-1 font-bold">
