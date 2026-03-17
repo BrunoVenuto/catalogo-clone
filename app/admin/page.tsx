@@ -98,7 +98,7 @@ export default function AdminPage() {
 
     if (!session) {
       return (
-        <div className="max-w-md mx-auto mt-20 p-8 bg-[#1a1a1a] border border-gray-800 rounded-xl shadow-lg relative">
+        <div className="max-w-md mx-4 sm:mx-auto mt-10 sm:mt-20 p-6 sm:p-8 bg-[#1a1a1a] border border-gray-800 rounded-xl shadow-lg relative">
           <h2 className="text-2xl font-black text-gray-100 tracking-tight mb-6 text-center uppercase">
             Acesso Restrito
           </h2>
@@ -157,7 +157,7 @@ export default function AdminPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
         <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-6 shadow-sm hover:shadow-md hover:border-mega-orange transition-all group">
           <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-4 group-hover:text-mega-orange transition-colors">
             Faturamento Hoje

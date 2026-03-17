@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
 import LeadModalConsultoria from "./LeadModalConsultoria";
 import { siteConfig } from "@/config/site";
 import { MessageCircle } from "lucide-react";
@@ -13,7 +14,12 @@ type ConsultoriaData = {
 };
 
 export default function FloatingCTA() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   // 💬 NÚMERO CORRETO DA CONSULTORIA (somente dígitos)
   const whatsappConsultoria = useMemo(

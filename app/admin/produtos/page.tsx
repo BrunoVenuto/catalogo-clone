@@ -182,7 +182,7 @@ export default function AdminProdutosPage() {
       <div className="grid lg:grid-cols-3 gap-8 mt-6">
 
         {/* FORMULÁRIO */}
-        <div className="lg:col-span-1 border border-gray-800 bg-[#1a1a1a] rounded-xl shadow-sm p-6 self-start sticky top-24">
+        <div className="lg:col-span-1 border border-gray-800 bg-[#1a1a1a] rounded-xl shadow-sm p-6 lg:self-start lg:sticky lg:top-24">
           <h3 className="text-lg font-black text-gray-100 mb-6 uppercase tracking-tight border-b border-gray-800 pb-4 flex justify-between items-center">
             {editingId ? "Editar Produto" : "Novo Produto"}
             {editingId && (
