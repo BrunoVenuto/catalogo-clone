@@ -64,8 +64,8 @@ type ProductSectionProps = {
 };
 
 export default function ProductSection({ searchTerm = "" }: ProductSectionProps) {
-  const [allProducts, setAllProducts] = useState<Product[]>(MOCK_PRODUCTS);
-  const [loading, setLoading] = useState(false);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function ProductSection({ searchTerm = "" }: ProductSectionProps)
       try {
         setLoading(true);
         const data = await getProducts();
-        if (data && data.length > 0) {
+        if (data) {
           setAllProducts(data);
         }
       } catch (err) {
