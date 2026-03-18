@@ -41,7 +41,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2">
                 <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-mega-orange font-bold">W</span>
-                <span>(31) 99545-3632</span>
+                <span>(31) 99087-3780</span>
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-mega-orange font-bold">@</span>

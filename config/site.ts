@@ -2,15 +2,15 @@ export const siteConfig = {
   name: "MG PHARMA",
 
   // 📦 Número para RECEBER PEDIDOS (somente dígitos: 55 + DDD + número)
-  whatsappPedido: "5531995453632", // <-- troque pelo SEU número real de pedidos
+  whatsappPedido: "5531990873780", // <-- troque pelo SEU número real de pedidos
 
   // 💬 Número para CONSULTORIA
   // wa.me exige somente dígitos:
-  whatsappConsultoria: "5531995453632",
+  whatsappConsultoria: "5531990873780",
 
   // ✅ compatibilidade: se algum lugar do projeto ainda usa siteConfig.whatsapp
   // apontamos para o número de PEDIDOS
-  whatsapp: "5531995453632",
+  whatsapp: "5531990873780",
 
   whatsappMessage:
     "Olá! Eu vim do seu site e gostaria de fazer um pedido com os seguintes itens:",
